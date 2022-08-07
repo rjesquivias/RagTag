@@ -276,7 +276,7 @@ public class ProjectDaoTest {
 
   @Test
   public void whenCreate_happyPath_succeeds()
-      throws IOException, InterruptedException, URISyntaxException {
+      throws IOException, InterruptedException {
     Project expected = buildTestProject();
     CreateArgs args = CreateArgs.builder().name(expected.getName()).build();
 

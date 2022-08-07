@@ -2,19 +2,15 @@ package com.rjesquivias.todoist.dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThrows;
 
 import com.rjesquivias.todoist.dao.IProjectDao.CreateArgs;
 import com.rjesquivias.todoist.dao.IProjectDao.UpdateArgs;
 import com.rjesquivias.todoist.domain.Colors;
 import com.rjesquivias.todoist.domain.Project;
-import com.rjesquivias.todoist.exceptions.ServiceUnavailableException;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.net.http.HttpClient;
 import java.util.Collection;
 import java.util.logging.Logger;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ProjectDaoIntegrationTest {

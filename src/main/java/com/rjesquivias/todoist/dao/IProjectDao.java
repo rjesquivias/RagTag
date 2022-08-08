@@ -2,12 +2,11 @@ package com.rjesquivias.todoist.dao;
 
 import com.rjesquivias.todoist.domain.Colors;
 import com.rjesquivias.todoist.domain.Project;
+import java.util.Collection;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.Collection;
-
-public interface IProjectDao {
+public interface IProjectDao extends IBaseDao {
 
   Collection<Project> getAll();
 

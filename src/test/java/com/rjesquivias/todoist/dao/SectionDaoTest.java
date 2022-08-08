@@ -6,10 +6,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rjesquivias.todoist.dao.ISectionDao.CreateArgs;
 import com.rjesquivias.todoist.domain.Section;
-import com.rjesquivias.todoist.util.http.HttpRequestFactory;
 import com.rjesquivias.todoist.util.http.HttpRequestHelper;
 import com.rjesquivias.todoist.util.http.ResponsePredicate;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -18,17 +15,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-public class SectionDaoTest {
-
-  private final String validUriString = "http://finance.yahoo.com/";
-  private final String testToken = "test-token";
-  private final HttpRequestFactory httpRequestFactory = new HttpRequestFactory(testToken,
-      new ObjectMapper());
-  private final long testProjectId = 19382;
-  private final CreateArgs createArgs = CreateArgs.builder().name("test-section-1")
-      .project_id(testProjectId).build();
-  private final long testSectionId = 28391;
-  private final String testUpdatedSectionName = "test-new-section-name";
+public class SectionDaoTest implements IBaseDaoTest {
 
   @Test
   public void whenGetAll_callsHttpRequestHelperWithCorrectArguments() {
@@ -87,7 +74,7 @@ public class SectionDaoTest {
     when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
     SectionDao sectionDao = new SectionDao(mockedHttpRequestHelper, mockedDotenv);
 
-    sectionDao.create(createArgs);
+    sectionDao.create(createSectionArgs);
 
     ArgumentCaptor<HttpRequest> requestArgumentCaptor = ArgumentCaptor.forClass(HttpRequest.class);
     ArgumentCaptor<ResponsePredicate> responsePredicateArgumentCaptor = ArgumentCaptor.forClass(
@@ -97,7 +84,8 @@ public class SectionDaoTest {
     verify(mockedHttpRequestHelper).makeRequest(requestArgumentCaptor.capture(),
         responsePredicateArgumentCaptor.capture(), classArgumentCaptor.capture());
 
-    HttpRequest expectedHttpRequest = httpRequestFactory.buildPost(validUriString, createArgs);
+    HttpRequest expectedHttpRequest = httpRequestFactory.buildPost(validUriString,
+        createSectionArgs);
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());

@@ -1,4 +1,5 @@
 package com.rjesquivias.todoist.dao;
 
-public class CommentDaoTest {
+public class CommentDaoTest implements IBaseDaoTest {
+
 }

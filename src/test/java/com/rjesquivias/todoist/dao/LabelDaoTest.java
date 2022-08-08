@@ -1,4 +1,5 @@
 package com.rjesquivias.todoist.dao;
 
-public class LabelDaoTest {
+public class LabelDaoTest implements IBaseDaoTest {
+
 }

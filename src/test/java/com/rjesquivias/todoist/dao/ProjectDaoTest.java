@@ -29,7 +29,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-public class ProjectDaoTest {
+public class ProjectDaoTest implements IBaseDaoTest {
 
   private final HttpClient mockedHttpClient = Mockito.mock(HttpClient.class);
 

@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjesquivias.todoist.domain.Section;
 import com.rjesquivias.todoist.util.http.HttpRequestFactory;
 import com.rjesquivias.todoist.util.http.HttpRequestHelper;
-import com.rjesquivias.todoist.util.http.ResponsePredicate;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.net.http.HttpRequest;
 import java.util.Collection;
 import java.util.logging.Logger;
-import org.apache.http.HttpStatus;
 
 public class SectionDao implements ISectionDao {
 
@@ -17,10 +15,6 @@ public class SectionDao implements ISectionDao {
   private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
   private final HttpRequestFactory httpRequestFactory;
   private final HttpRequestHelper httpRequestHelper;
-  final static ResponsePredicate okPredicate = response ->
-      response.statusCode() == HttpStatus.SC_OK;
-  final static ResponsePredicate noContentPredicate = response ->
-      response.statusCode() == HttpStatus.SC_NO_CONTENT;
 
   public SectionDao(HttpRequestHelper httpRequestHelper, Dotenv dotenv) {
     this.baseUri = dotenv.get("SECTION_URI");

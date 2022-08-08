@@ -7,7 +7,7 @@ import java.util.Collection;
 import lombok.Builder;
 import lombok.Data;
 
-public interface ISectionDao {
+public interface ISectionDao extends IBaseDao {
 
   Collection<Section> getAll();
 

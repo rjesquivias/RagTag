@@ -20,7 +20,7 @@ public class Task {
   private String content;
   private String description;
   private boolean completed;
-  private Collection<Integer> label_ids;
+  private Collection<Long> label_ids;
   private long parent_id;
   private long order;
   private long priority;
@@ -31,6 +31,7 @@ public class Task {
   private long assigner;
 
   @Data
+  @JsonIgnoreProperties(ignoreUnknown = true)
   private class Due {
 
     private String string;

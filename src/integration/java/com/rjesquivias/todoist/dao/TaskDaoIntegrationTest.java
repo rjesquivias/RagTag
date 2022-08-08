@@ -31,14 +31,14 @@ public class TaskDaoIntegrationTest {
 
   @Test
   public void whenGetAllActive_returnsAllTasks() {
-    for (String name : taskContent) {
-      taskDao.create(ITaskDao.CreateArgs.builder().content(name).build());
+    for (String content : taskContent) {
+      taskDao.create(ITaskDao.CreateArgs.builder().content(content).build());
     }
 
     Collection<Task> tasks = taskDao.getAllActive(GetAllActiveArgs.builder().build());
 
-    for (String name : taskContent) {
-      Task foundTask = tasks.stream().filter(task -> task.getContent().equals(name))
+    for (String content : taskContent) {
+      Task foundTask = tasks.stream().filter(task -> task.getContent().equals(content))
           .findFirst().orElse(null);
       assertNotNull(foundTask);
       taskDao.delete(foundTask.getId());

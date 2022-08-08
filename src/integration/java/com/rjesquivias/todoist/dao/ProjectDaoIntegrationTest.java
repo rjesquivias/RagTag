@@ -10,7 +10,6 @@ import com.rjesquivias.todoist.domain.Project;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.net.http.HttpClient;
 import java.util.Collection;
-import java.util.logging.Logger;
 import org.junit.Test;
 
 public class ProjectDaoIntegrationTest {

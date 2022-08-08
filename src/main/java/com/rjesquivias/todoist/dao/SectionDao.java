@@ -32,7 +32,7 @@ public class SectionDao implements ISectionDao {
 
   @Override
   public Collection<Section> getAll(long project_id) {
-    LOGGER.info("SectionDao::getAll()");
+    LOGGER.info("SectionDao::getAll(long project_id)");
     HttpRequest request = httpRequestFactory.buildGet(
         String.format("%s?project_id=%d", baseUri, project_id));
     return httpRequestHelper.makeCollectionRequest(request, okPredicate, Section.class);
@@ -54,7 +54,7 @@ public class SectionDao implements ISectionDao {
 
   @Override
   public void update(long id, String name) {
-    LOGGER.info("SectionDao::update(UpdateArgs args)");
+    LOGGER.info("SectionDao::update(long id, String name)");
     HttpRequest request = httpRequestFactory.buildPost(baseUri + id,
         String.format("{\"name\": \"%s\"}", name));
     httpRequestHelper.makeRequest(request, noContentPredicate, Section.class);

@@ -2,6 +2,7 @@ package com.rjesquivias.todoist.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
+import com.rjesquivias.todoist.domain.Colors;
 import com.rjesquivias.todoist.util.http.HttpRequestFactory;
 import java.util.Collection;
 
@@ -27,7 +28,11 @@ public interface IBaseDaoTest {
   String testDueDatetime = "testDueDatetime";
   String testDueLang = "testDueLang";
   Long testAssignee = Long.valueOf(2819);
-  Collection<Long> testIds = ImmutableList.of(Long.valueOf(1), Long.valueOf(2), Long.valueOf(3),
+  String testName = "testName";
+  Boolean testFavorite = true;
+  Colors testColor = Colors.CHARCOAL;
+  Collection<Long> testIds = ImmutableList.of(Long.valueOf(1), Long.valueOf(2),
+      Long.valueOf(3),
       Long.valueOf(4), Long.valueOf(5));
   Collection<Long> testLabelIds = ImmutableList.of(Long.valueOf(1), Long.valueOf(2),
       Long.valueOf(3), Long.valueOf(4), Long.valueOf(5));
@@ -45,6 +50,10 @@ public interface IBaseDaoTest {
       .lang(testLang).ids(testIds).build();
   ICommentDao.CreateArgs createCommentArgs = ICommentDao.CreateArgs.builder().task_id(testTaskId)
       .content(testContent).build();
+  ILabelDao.CreateArgs createLabelArgs = ILabelDao.CreateArgs.builder().name(testName)
+      .order(testOrder).color(testColor).favorite(testFavorite).build();
+  ILabelDao.UpdateArgs updateLabelArgs = ILabelDao.UpdateArgs.builder().name(testName)
+      .order(testOrder).color(testColor).favorite(testFavorite).build();
   String testUpdatedSectionName = "test-new-section-name";
 
 }

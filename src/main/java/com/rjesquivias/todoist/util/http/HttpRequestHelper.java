@@ -36,7 +36,6 @@ public class HttpRequestHelper {
     try {
       HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
       if (predicate.isValid(response)) {
-        System.out.println(response.body());
         return !response.body().isEmpty() ? objectMapper.readValue(response.body(), type) : null;
       } else {
         throw new ServiceUnavailableException(

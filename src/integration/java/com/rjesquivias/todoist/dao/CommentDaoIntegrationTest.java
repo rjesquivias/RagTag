@@ -25,14 +25,10 @@ public class CommentDaoIntegrationTest {
   private static final ICommentDao commentDao = new CommentDao(
       new HttpRequestHelper(HttpClient.newBuilder().build()),
       Dotenv.load());
-
   private static final String testprojectName = "INT_TEST_PROJECT_NAME_1";
-
   private static final Collection<String> testContent = ImmutableList.of("INT_TEST_CONTENT_1",
       "INT_TEST_CONTENT_2", "INT_TEST_CONTENT_3", "INT_TEST_CONTENT_4");
-
   private static final String testContentOne = "INT_TEST_CONTENT_1";
-  private static final String testContentTwo = "INT_TEST_CONTENT_2";
   private static final String testCommentContentOne = "INT_TEST_CONTENT_1";
   private static final String testCommentContentTwo = "INT_TEST_CONTENT_2";
 

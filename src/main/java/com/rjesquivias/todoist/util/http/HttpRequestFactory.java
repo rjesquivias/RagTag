@@ -20,11 +20,20 @@ public class HttpRequestFactory {
 
   public HttpRequest buildPost(String uri, Object obj) {
     try {
+      String json = objectMapper.writeValueAsString(obj);
+      return buildPost(uri, json);
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public HttpRequest buildPost(String uri, String body) {
+    try {
       return HttpRequest.newBuilder().uri(new URI(uri))
           .header("Authorization", "Bearer " + token)
           .header("Content-Type", "application/json")
-          .POST(BodyPublishers.ofString(objectMapper.writeValueAsString(obj))).build();
-    } catch (URISyntaxException | JsonProcessingException e) {
+          .POST(BodyPublishers.ofString(body)).build();
+    } catch (URISyntaxException e) {
       throw new RuntimeException(e);
     }
   }

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class Section {
 
   private long id;
-  private long projectId;
+  private long project_id;
   private long order;
   private String name;
 }

@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 public class Comment {
 
   private long id;
-  private long taskId;
-  private long projectId;
+  private long task_id;
+  private long project_id;
   private String posted;
   private String content;
 }

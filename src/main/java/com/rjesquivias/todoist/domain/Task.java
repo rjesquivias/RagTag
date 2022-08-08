@@ -1,31 +1,32 @@
 package com.rjesquivias.todoist.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Collection;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.Collection;
 import lombok.NoArgsConstructor;
 
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Task {
 
   private long id;
-  private long projectId;
-  private long sectionId;
+  private long project_id;
+  private long section_id;
   private String content;
   private String description;
   private boolean completed;
-  private Collection<Integer> labelIds;
-  private long parentId;
+  private Collection<Integer> label_ids;
+  private long parent_id;
   private long order;
   private long priority;
   private Due due;
   private String url;
-  private long commentCount;
+  private long comment_count;
   private long assignee;
   private long assigner;
 

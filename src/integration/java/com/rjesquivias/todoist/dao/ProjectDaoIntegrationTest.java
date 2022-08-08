@@ -15,8 +15,6 @@ import org.junit.Test;
 
 public class ProjectDaoIntegrationTest {
 
-  private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-
   private static final IProjectDao projectDao = new ProjectDao(HttpClient.newBuilder().build(),
       Dotenv.load());
 

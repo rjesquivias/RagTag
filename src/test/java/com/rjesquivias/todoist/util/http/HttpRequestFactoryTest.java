@@ -17,7 +17,6 @@ public class HttpRequestFactoryTest {
 
   private final String invalidUriString = "http://finance.yahoo.com/q/h?s=^IXIC";
   private final String validUriString = "http://finance.yahoo.com/";
-
   private final String testToken = "test-token";
 
   @Test

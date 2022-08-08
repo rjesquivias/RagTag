@@ -16,13 +16,13 @@ public class Project {
   private long id;
   private String name;
   private Colors color;
-  private long parentId;
+  private long parent_id;
   private long order;
-  private long commentCount;
+  private long comment_count;
   private boolean shared;
   private boolean favorite;
-  private boolean inboxProject;
-  private boolean teamInbox;
-  private long syncId;
+  private boolean inbox_project;
+  private boolean team_inbox;
+  private long sync_id;
   private String url;
 }

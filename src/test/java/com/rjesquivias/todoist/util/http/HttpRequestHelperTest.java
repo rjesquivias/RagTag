@@ -144,9 +144,8 @@ public class HttpRequestHelperTest {
   }
 
   static Project buildTestProject() {
-    return Project.builder().id(1).name("name").color(Colors.BLUE).parentId(1).order(1)
-        .commentCount(1)
-        .shared(true).favorite(true).inboxProject(true).teamInbox(true).syncId(1).url("url")
-        .build();
+    return Project.builder().id(1).name("name").color(Colors.BLUE).parent_id(1).order(1)
+        .comment_count(1).shared(true).favorite(true).inbox_project(true).team_inbox(true)
+        .sync_id(1).url("url").build();
   }
 }

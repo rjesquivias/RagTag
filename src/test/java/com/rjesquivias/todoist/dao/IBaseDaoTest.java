@@ -54,6 +54,12 @@ public interface IBaseDaoTest {
       .order(testOrder).color(testColor).favorite(testFavorite).build();
   ILabelDao.UpdateArgs updateLabelArgs = ILabelDao.UpdateArgs.builder().name(testName)
       .order(testOrder).color(testColor).favorite(testFavorite).build();
+  IProjectDao.CreateArgs createProjectArgs = IProjectDao.CreateArgs.builder().name(testName)
+      .build();
+  IProjectDao.UpdateArgs updateProjectArgs = IProjectDao.UpdateArgs.builder().name(testName)
+      .build();
+  ITaskDao.UpdateArgs updateTaskArgs = ITaskDao.UpdateArgs.builder().content(testContent).build();
+
   String testUpdatedSectionName = "test-new-section-name";
 
 }

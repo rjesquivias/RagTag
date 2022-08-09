@@ -1,29 +1,23 @@
-package com.rjesquivias.todoist.dao;
+package com.rjesquivias.todoist;
 
-import static com.rjesquivias.todoist.dao.IBaseDao.noContentPredicate;
-import static com.rjesquivias.todoist.dao.IBaseDao.okPredicate;
+import static com.rjesquivias.todoist.Predicates.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.rjesquivias.todoist.domain.Label;
-import com.rjesquivias.todoist.util.http.HttpRequestHelper;
-import com.rjesquivias.todoist.util.http.ResponsePredicate;
-import io.github.cdimascio.dotenv.Dotenv;
+
 import java.net.http.HttpRequest;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import static com.rjesquivias.todoist.TestConstants.*;
 
-public class LabelDaoTest implements IBaseDaoTest {
+public final class LabelDaoTest {
 
   @Test
   public void whenGetAll_callsHttpRequestHelperWithCorrectArguments() {
     HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
-    when(mockedDotenv.get("LABEL_URI")).thenReturn(validUriString);
-    when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
-    LabelDao labelDao = new LabelDao(mockedHttpRequestHelper, mockedDotenv);
+    LabelDao labelDao = new LabelDao(mockedHttpRequestHelper, validUriString, testToken);
 
     labelDao.getAll();
 
@@ -45,10 +39,7 @@ public class LabelDaoTest implements IBaseDaoTest {
   @Test
   public void whenCreate_callsHttpRequestHelperWithCorrectArguments() {
     HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
-    when(mockedDotenv.get("LABEL_URI")).thenReturn(validUriString);
-    when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
-    LabelDao labelDao = new LabelDao(mockedHttpRequestHelper, mockedDotenv);
+    LabelDao labelDao = new LabelDao(mockedHttpRequestHelper, validUriString, testToken);
 
     labelDao.create(createLabelArgs);
 
@@ -70,10 +61,7 @@ public class LabelDaoTest implements IBaseDaoTest {
   @Test
   public void whenGet_callsHttpRequestHelperWithCorrectArguments() {
     HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
-    when(mockedDotenv.get("LABEL_URI")).thenReturn(validUriString);
-    when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
-    LabelDao labelDao = new LabelDao(mockedHttpRequestHelper, mockedDotenv);
+    LabelDao labelDao = new LabelDao(mockedHttpRequestHelper, validUriString, testToken);
 
     labelDao.get(testLabelId);
 
@@ -95,10 +83,7 @@ public class LabelDaoTest implements IBaseDaoTest {
   @Test
   public void whenUpdate_callsHttpRequestHelperWithCorrectArguments() {
     HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
-    when(mockedDotenv.get("LABEL_URI")).thenReturn(validUriString);
-    when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
-    LabelDao labelDao = new LabelDao(mockedHttpRequestHelper, mockedDotenv);
+    LabelDao labelDao = new LabelDao(mockedHttpRequestHelper, validUriString, testToken);
 
     labelDao.update(testLabelId, updateLabelArgs);
 
@@ -121,10 +106,7 @@ public class LabelDaoTest implements IBaseDaoTest {
   @Test
   public void whenDelete_callsHttpRequestHelperWithCorrectArguments() {
     HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
-    when(mockedDotenv.get("LABEL_URI")).thenReturn(validUriString);
-    when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
-    LabelDao labelDao = new LabelDao(mockedHttpRequestHelper, mockedDotenv);
+    LabelDao labelDao = new LabelDao(mockedHttpRequestHelper, validUriString, testToken);
 
     labelDao.delete(testLabelId);
 

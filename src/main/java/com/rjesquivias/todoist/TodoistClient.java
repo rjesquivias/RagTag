@@ -1,20 +1,18 @@
-package com.rjesquivias.todoist.client;
+package com.rjesquivias.todoist;
 
-import com.rjesquivias.todoist.dao.ICommentDao;
-import com.rjesquivias.todoist.dao.ILabelDao;
-import com.rjesquivias.todoist.dao.IProjectDao;
-import com.rjesquivias.todoist.dao.ISectionDao;
-import com.rjesquivias.todoist.dao.ITaskDao;
 import com.rjesquivias.todoist.domain.Comment;
 import com.rjesquivias.todoist.domain.Label;
 import com.rjesquivias.todoist.domain.Project;
 import com.rjesquivias.todoist.domain.Section;
 import com.rjesquivias.todoist.domain.Task;
+
+import java.net.http.HttpClient;
 import java.util.Collection;
+
 import lombok.Builder;
 
 @Builder
-public class SynchronousTodoistClient {
+public class TodoistClient {
 
   private final ICommentDao commentDao;
   private final ILabelDao labelDao;
@@ -22,8 +20,23 @@ public class SynchronousTodoistClient {
   private final ISectionDao sectionDao;
   private final ITaskDao taskDao;
 
-  SynchronousTodoistClient(ICommentDao commentDao, ILabelDao labelDao, IProjectDao projectDao,
-      ISectionDao sectionDao, ITaskDao taskDao) {
+  public static TodoistClient buildClient(String baseUrl, String apiToken) {
+    HttpRequestHelper requestHelper = new HttpRequestHelper(HttpClient.newBuilder().build());
+
+    return TodoistClient.builder()
+            .projectDao(new ProjectDao(HttpClient.newBuilder().build(), baseUrl + "/rest/v1/projects/", apiToken))
+            .sectionDao(new SectionDao(requestHelper, baseUrl + "/rest/v1/sections/", apiToken))
+            .taskDao(new TaskDao(requestHelper, baseUrl + "/rest/v1/tasks/", apiToken))
+            .commentDao(new CommentDao(requestHelper, baseUrl + "/rest/v1/comments/", apiToken))
+            .labelDao(new LabelDao(requestHelper, baseUrl + "/rest/v1/labels/", apiToken)).build();
+  }
+  public static TodoistClient buildClient(String apiToken) {
+    return buildClient("https://api.todoist.com", apiToken);
+  }
+
+
+  TodoistClient(ICommentDao commentDao, ILabelDao labelDao, IProjectDao projectDao,
+                ISectionDao sectionDao, ITaskDao taskDao) {
     this.commentDao = commentDao;
     this.labelDao = labelDao;
     this.projectDao = projectDao;

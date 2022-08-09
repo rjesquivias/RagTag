@@ -1,4 +1,4 @@
-package com.rjesquivias.todoist.dao;
+package com.rjesquivias.todoist;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
@@ -9,13 +9,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
-import com.rjesquivias.todoist.dao.IProjectDao.CreateArgs;
-import com.rjesquivias.todoist.dao.IProjectDao.UpdateArgs;
-import com.rjesquivias.todoist.domain.Colors;
+import com.rjesquivias.todoist.IProjectDao.CreateArgs;
+import com.rjesquivias.todoist.IProjectDao.UpdateArgs;
+import com.rjesquivias.todoist.domain.Color;
 import com.rjesquivias.todoist.domain.Project;
-import com.rjesquivias.todoist.exceptions.ServiceUnavailableException;
-import io.github.cdimascio.dotenv.Dotenv;
+import com.rjesquivias.todoist.exceptions.ServiceUnavailable;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,12 +23,15 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.util.Collection;
+import java.util.List;
+
 import org.apache.http.HttpStatus;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-public class ProjectDaoTest implements IBaseDaoTest {
+import static com.rjesquivias.todoist.TestConstants.*;
+public class ProjectDaoTest {
 
   private final HttpClient mockedHttpClient = Mockito.mock(HttpClient.class);
 
@@ -37,7 +39,7 @@ public class ProjectDaoTest implements IBaseDaoTest {
 
   @Test
   public void whenGetAll_happyPath_succeeds() throws IOException, InterruptedException {
-    Collection<Project> expected = ImmutableList.of(buildTestProject(), buildTestProject());
+    Collection<Project> expected = List.of(buildTestProject(), buildTestProject());
 
     @SuppressWarnings("unchecked")
     HttpResponse<String> mockedResponse = Mockito.mock(HttpResponse.class);
@@ -45,7 +47,7 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, validUriString, testToken);
     Collection<Project> projects = projectDao.getAll();
 
     assertEquals(expected, projects);
@@ -54,7 +56,7 @@ public class ProjectDaoTest implements IBaseDaoTest {
   @Test
   public void whenGetAll_happyPath_requestIsCreatedCorrectly()
       throws IOException, InterruptedException, URISyntaxException {
-    Collection<Project> expected = ImmutableList.of(buildTestProject(), buildTestProject());
+    Collection<Project> expected = List.of(buildTestProject(), buildTestProject());
 
     @SuppressWarnings("unchecked")
     HttpResponse<String> mockedResponse = Mockito.mock(HttpResponse.class);
@@ -62,15 +64,13 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    Dotenv dotenv = Dotenv.load();
-    String token = dotenv.get("TODOIST_API_TOKEN");
-    String baseUri = dotenv.get("PROJECT_URI");
-    assert baseUri != null;
+    String token = testToken;
+    String baseUri = validUriString;
     HttpRequest expectedRequest = HttpRequest.newBuilder().uri(new URI(baseUri))
         .header("Authorization", "Bearer " + token)
         .GET().build();
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, dotenv);
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, baseUri, token);
     projectDao.getAll();
 
     ArgumentCaptor<HttpRequest> argumentCaptor = ArgumentCaptor.forClass(HttpRequest.class);
@@ -82,7 +82,7 @@ public class ProjectDaoTest implements IBaseDaoTest {
   @Test
   public void whenGetAll_responseStatusInvalid_throwsServiceUnavailableException()
       throws IOException, InterruptedException {
-    Collection<Project> expected = ImmutableList.of(buildTestProject());
+    Collection<Project> expected = List.of(buildTestProject());
 
     @SuppressWarnings("unchecked")
     HttpResponse<String> mockedResponse = Mockito.mock(HttpResponse.class);
@@ -90,8 +90,8 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
-    Exception exception = assertThrows(ServiceUnavailableException.class, projectDao::getAll);
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, validUriString, testToken);
+    Exception exception = assertThrows(ServiceUnavailable.class, projectDao::getAll);
 
     String expectedMessage = String.format("Status: %d Body: %s",
         HttpStatus.SC_INTERNAL_SERVER_ERROR, objectMapper.writeValueAsString(expected));
@@ -103,7 +103,7 @@ public class ProjectDaoTest implements IBaseDaoTest {
   @Test
   public void whenGetAll_withInvalidUri_throwsRuntimeException()
       throws IOException, InterruptedException {
-    Collection<Project> expected = ImmutableList.of(buildTestProject());
+    Collection<Project> expected = List.of(buildTestProject());
 
     @SuppressWarnings("unchecked")
     HttpResponse<String> mockedResponse = Mockito.mock(HttpResponse.class);
@@ -111,11 +111,9 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
     final String invalidUriString = "http://finance.yahoo.com/q/h?s=^IXIC";
-    when(mockedDotenv.get("PROJECT_URI")).thenReturn(invalidUriString);
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, mockedDotenv);
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, invalidUriString, testToken);
     Exception exception = assertThrows(RuntimeException.class, projectDao::getAll);
 
     String expectedMessage = "Illegal character in query at index 31: " + invalidUriString;
@@ -129,7 +127,7 @@ public class ProjectDaoTest implements IBaseDaoTest {
       throws IOException, InterruptedException {
     when(mockedHttpClient.send(any(), any())).thenThrow(new IOException("Bad Beef"));
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, validUriString, testToken);
     Exception exception = assertThrows(RuntimeException.class, projectDao::getAll);
 
     String expectedMessage = "Bad Beef";
@@ -143,7 +141,7 @@ public class ProjectDaoTest implements IBaseDaoTest {
       throws IOException, InterruptedException {
     when(mockedHttpClient.send(any(), any())).thenThrow(new InterruptedException("Bad Beef"));
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, validUriString, testToken);
     Exception exception = assertThrows(RuntimeException.class, projectDao::getAll);
 
     String expectedMessage = "Bad Beef";
@@ -162,8 +160,8 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
-    Project project = projectDao.get(expected.getId());
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, validUriString, testToken);
+    Project project = projectDao.get(expected.id());
 
     assertEquals(expected, project);
   }
@@ -179,16 +177,15 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    Dotenv dotenv = Dotenv.load();
-    String token = dotenv.get("TODOIST_API_TOKEN");
-    String baseUri = dotenv.get("PROJECT_URI");
-    String expectedUri = baseUri + expected.getId();
+    String token = testToken;
+    String baseUri = validUriString;
+    String expectedUri = baseUri + expected.id();
     HttpRequest expectedRequest = HttpRequest.newBuilder().uri(new URI(expectedUri))
         .header("Authorization", "Bearer " + token)
         .GET().build();
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, dotenv);
-    projectDao.get(expected.getId());
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, baseUri, token);
+    projectDao.get(expected.id());
 
     ArgumentCaptor<HttpRequest> argumentCaptor = ArgumentCaptor.forClass(HttpRequest.class);
     verify(mockedHttpClient).send(argumentCaptor.capture(), any());
@@ -207,9 +204,9 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
-    Exception exception = assertThrows(ServiceUnavailableException.class,
-        () -> projectDao.get(expected.getId()));
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, validUriString, testToken);
+    Exception exception = assertThrows(ServiceUnavailable.class,
+        () -> projectDao.get(expected.id()));
 
     String expectedMessage = String.format("Status: %d Body:", HttpStatus.SC_INTERNAL_SERVER_ERROR);
     String actualMessage = exception.getMessage();
@@ -228,13 +225,11 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
     final String invalidUriString = "http://finance.yahoo.com/q/h?s=^IXIC";
-    when(mockedDotenv.get("PROJECT_URI")).thenReturn(invalidUriString);
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, mockedDotenv);
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, invalidUriString, testToken);
     Exception exception = assertThrows(RuntimeException.class,
-        () -> projectDao.get(expected.getId()));
+        () -> projectDao.get(expected.id()));
 
     String expectedMessage = "Illegal character in query at index 31: " + invalidUriString;
     String actualMessage = exception.getMessage();
@@ -248,9 +243,9 @@ public class ProjectDaoTest implements IBaseDaoTest {
     Project expected = buildTestProject();
     when(mockedHttpClient.send(any(), any())).thenThrow(new IOException("Bad Beef"));
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, validUriString, testToken);
     Exception exception = assertThrows(RuntimeException.class,
-        () -> projectDao.get(expected.getId()));
+        () -> projectDao.get(expected.id()));
 
     String expectedMessage = "Bad Beef";
     String actualMessage = exception.getMessage();
@@ -264,9 +259,9 @@ public class ProjectDaoTest implements IBaseDaoTest {
     Project expected = buildTestProject();
     when(mockedHttpClient.send(any(), any())).thenThrow(new InterruptedException("Bad Beef"));
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, validUriString, testToken);
     Exception exception = assertThrows(RuntimeException.class,
-        () -> projectDao.get(expected.getId()));
+        () -> projectDao.get(expected.id()));
 
     String expectedMessage = "Bad Beef";
     String actualMessage = exception.getMessage();
@@ -278,7 +273,7 @@ public class ProjectDaoTest implements IBaseDaoTest {
   public void whenCreate_happyPath_succeeds()
       throws IOException, InterruptedException {
     Project expected = buildTestProject();
-    CreateArgs args = CreateArgs.builder().name(expected.getName()).build();
+    CreateArgs args = CreateArgs.builder().name(expected.name()).build();
 
     @SuppressWarnings("unchecked")
     HttpResponse<String> mockedResponse = Mockito.mock(HttpResponse.class);
@@ -286,7 +281,7 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, validUriString, testToken);
     Project project = projectDao.create(args);
 
     assertEquals(expected, project);
@@ -296,7 +291,7 @@ public class ProjectDaoTest implements IBaseDaoTest {
   public void whenCreate_happyPath_requestIsCreatedCorrectly()
       throws IOException, InterruptedException, URISyntaxException {
     Project expected = buildTestProject();
-    CreateArgs args = CreateArgs.builder().name(expected.getName()).build();
+    CreateArgs args = CreateArgs.builder().name(expected.name()).build();
 
     @SuppressWarnings("unchecked")
     HttpResponse<String> mockedResponse = Mockito.mock(HttpResponse.class);
@@ -304,16 +299,14 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    Dotenv dotenv = Dotenv.load();
-    String token = dotenv.get("TODOIST_API_TOKEN");
-    String baseUri = dotenv.get("PROJECT_URI");
-    assert baseUri != null;
+    String token = testToken;
+    String baseUri = validUriString;
     HttpRequest expectedRequest = HttpRequest.newBuilder().uri(new URI(baseUri))
         .header("Authorization", "Bearer " + token)
         .header("Content-Type", "application/json")
         .POST(BodyPublishers.ofString(objectMapper.writeValueAsString(args))).build();
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, dotenv);
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, baseUri, token);
     projectDao.create(args);
 
     ArgumentCaptor<HttpRequest> argumentCaptor = ArgumentCaptor.forClass(HttpRequest.class);
@@ -326,7 +319,7 @@ public class ProjectDaoTest implements IBaseDaoTest {
   public void whenCreate_responseStatusInvalid_throwsServiceUnavailableException()
       throws IOException, InterruptedException {
     Project expected = buildTestProject();
-    CreateArgs args = CreateArgs.builder().name(expected.getName()).build();
+    CreateArgs args = CreateArgs.builder().name(expected.name()).build();
 
     @SuppressWarnings("unchecked")
     HttpResponse<String> mockedResponse = Mockito.mock(HttpResponse.class);
@@ -334,8 +327,8 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
-    Exception exception = assertThrows(ServiceUnavailableException.class,
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, validUriString, testToken);
+    Exception exception = assertThrows(ServiceUnavailable.class,
         () -> projectDao.create(args));
 
     String expectedMessage = String.format("Status: %d Body:", HttpStatus.SC_INTERNAL_SERVER_ERROR);
@@ -348,7 +341,7 @@ public class ProjectDaoTest implements IBaseDaoTest {
   public void whenCreate_withInvalidUri_throwsRuntimeException()
       throws IOException, InterruptedException {
     Project expected = buildTestProject();
-    CreateArgs args = CreateArgs.builder().name(expected.getName()).build();
+    CreateArgs args = CreateArgs.builder().name(expected.name()).build();
 
     @SuppressWarnings("unchecked")
     HttpResponse<String> mockedResponse = Mockito.mock(HttpResponse.class);
@@ -356,11 +349,9 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
     final String invalidUriString = "http://finance.yahoo.com/q/h?s=^IXIC";
-    when(mockedDotenv.get("PROJECT_URI")).thenReturn(invalidUriString);
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, mockedDotenv);
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, invalidUriString, testToken);
     Exception exception = assertThrows(RuntimeException.class,
         () -> projectDao.create(args));
 
@@ -374,11 +365,11 @@ public class ProjectDaoTest implements IBaseDaoTest {
   public void whenCreate_clientThrowsIoException_throwsRuntimeException()
       throws IOException, InterruptedException {
     Project expected = buildTestProject();
-    CreateArgs args = CreateArgs.builder().name(expected.getName()).build();
+    CreateArgs args = CreateArgs.builder().name(expected.name()).build();
 
     when(mockedHttpClient.send(any(), any())).thenThrow(new IOException("Bad Beef"));
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, validUriString, testToken);
     Exception exception = assertThrows(RuntimeException.class,
         () -> projectDao.create(args));
 
@@ -392,11 +383,11 @@ public class ProjectDaoTest implements IBaseDaoTest {
   public void whenCreate_clientThrowsInterruptedException_throwsRuntimeException()
       throws IOException, InterruptedException {
     Project expected = buildTestProject();
-    CreateArgs args = CreateArgs.builder().name(expected.getName()).build();
+    CreateArgs args = CreateArgs.builder().name(expected.name()).build();
 
     when(mockedHttpClient.send(any(), any())).thenThrow(new InterruptedException("Bad Beef"));
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, validUriString, testToken);
     Exception exception = assertThrows(RuntimeException.class,
         () -> projectDao.create(args));
 
@@ -410,7 +401,7 @@ public class ProjectDaoTest implements IBaseDaoTest {
   public void whenUpdate_happyPath_succeeds()
       throws IOException, InterruptedException, URISyntaxException {
     Project expected = buildTestProject();
-    UpdateArgs args = UpdateArgs.builder().name(expected.getName()).build();
+    UpdateArgs args = UpdateArgs.builder().name(expected.name()).build();
 
     @SuppressWarnings("unchecked")
     HttpResponse<String> mockedResponse = Mockito.mock(HttpResponse.class);
@@ -418,17 +409,16 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    Dotenv dotenv = Dotenv.load();
-    String token = dotenv.get("TODOIST_API_TOKEN");
-    String baseUri = dotenv.get("PROJECT_URI");
-    String expectedUri = baseUri + expected.getId();
+    String token = testToken;
+    String baseUri = validUriString;
+    String expectedUri = baseUri + expected.id();
     HttpRequest expectedRequest = HttpRequest.newBuilder().uri(new URI(expectedUri))
         .header("Authorization", "Bearer " + token)
         .header("Content-Type", "application/json")
         .POST(BodyPublishers.ofString(objectMapper.writeValueAsString(args))).build();
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, dotenv);
-    projectDao.update(expected.getId(), args);
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, baseUri, token);
+    projectDao.update(expected.id(), args);
 
     ArgumentCaptor<HttpRequest> argumentCaptor = ArgumentCaptor.forClass(HttpRequest.class);
     verify(mockedHttpClient).send(argumentCaptor.capture(), any());
@@ -440,7 +430,7 @@ public class ProjectDaoTest implements IBaseDaoTest {
   public void whenUpdate_responseStatusInvalid_throwsServiceUnavailableException()
       throws IOException, InterruptedException {
     Project expected = buildTestProject();
-    UpdateArgs args = UpdateArgs.builder().name(expected.getName()).build();
+    UpdateArgs args = UpdateArgs.builder().name(expected.name()).build();
 
     @SuppressWarnings("unchecked")
     HttpResponse<String> mockedResponse = Mockito.mock(HttpResponse.class);
@@ -448,9 +438,9 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
-    Exception exception = assertThrows(ServiceUnavailableException.class,
-        () -> projectDao.update(expected.getId(), args));
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, validUriString, testToken);
+    Exception exception = assertThrows(ServiceUnavailable.class,
+        () -> projectDao.update(expected.id(), args));
 
     String expectedMessage = String.format("Status: %d Body:", HttpStatus.SC_INTERNAL_SERVER_ERROR);
     String actualMessage = exception.getMessage();
@@ -462,7 +452,7 @@ public class ProjectDaoTest implements IBaseDaoTest {
   public void whenUpdate_withInvalidUri_throwsRuntimeException()
       throws IOException, InterruptedException {
     Project expected = buildTestProject();
-    UpdateArgs args = UpdateArgs.builder().name(expected.getName()).build();
+    UpdateArgs args = UpdateArgs.builder().name(expected.name()).build();
 
     @SuppressWarnings("unchecked")
     HttpResponse<String> mockedResponse = Mockito.mock(HttpResponse.class);
@@ -470,13 +460,11 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
     final String invalidUriString = "http://finance.yahoo.com/q/h?s=^IXIC";
-    when(mockedDotenv.get("PROJECT_URI")).thenReturn(invalidUriString);
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, mockedDotenv);
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, invalidUriString, testToken);
     Exception exception = assertThrows(RuntimeException.class,
-        () -> projectDao.update(expected.getId(), args));
+        () -> projectDao.update(expected.id(), args));
 
     String expectedMessage = "Illegal character in query at index 31: " + invalidUriString;
     String actualMessage = exception.getMessage();
@@ -488,13 +476,13 @@ public class ProjectDaoTest implements IBaseDaoTest {
   public void whenUpdate_clientThrowsIoException_throwsRuntimeException()
       throws IOException, InterruptedException {
     Project expected = buildTestProject();
-    UpdateArgs args = UpdateArgs.builder().name(expected.getName()).build();
+    UpdateArgs args = UpdateArgs.builder().name(expected.name()).build();
 
     when(mockedHttpClient.send(any(), any())).thenThrow(new IOException("Bad Beef"));
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient,validUriString, testToken);
     Exception exception = assertThrows(RuntimeException.class,
-        () -> projectDao.update(expected.getId(), args));
+        () -> projectDao.update(expected.id(), args));
 
     String expectedMessage = "Bad Beef";
     String actualMessage = exception.getMessage();
@@ -506,13 +494,13 @@ public class ProjectDaoTest implements IBaseDaoTest {
   public void whenUpdate_clientThrowsInterruptedException_throwsRuntimeException()
       throws IOException, InterruptedException {
     Project expected = buildTestProject();
-    UpdateArgs args = UpdateArgs.builder().name(expected.getName()).build();
+    UpdateArgs args = UpdateArgs.builder().name(expected.name()).build();
 
     when(mockedHttpClient.send(any(), any())).thenThrow(new InterruptedException("Bad Beef"));
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, validUriString, testToken);
     Exception exception = assertThrows(RuntimeException.class,
-        () -> projectDao.update(expected.getId(), args));
+        () -> projectDao.update(expected.id(), args));
 
     String expectedMessage = "Bad Beef";
     String actualMessage = exception.getMessage();
@@ -531,16 +519,15 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    Dotenv dotenv = Dotenv.load();
-    String token = dotenv.get("TODOIST_API_TOKEN");
-    String baseUri = dotenv.get("PROJECT_URI");
-    String expectedUri = baseUri + expected.getId();
+    String token = testToken;
+    String baseUri = validUriString;
+    String expectedUri = baseUri + expected.id();
     HttpRequest expectedRequest = HttpRequest.newBuilder().uri(new URI(expectedUri))
         .header("Authorization", "Bearer " + token)
         .DELETE().build();
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, dotenv);
-    projectDao.delete(expected.getId());
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, baseUri, token);
+    projectDao.delete(expected.id());
 
     ArgumentCaptor<HttpRequest> argumentCaptor = ArgumentCaptor.forClass(HttpRequest.class);
     verify(mockedHttpClient).send(argumentCaptor.capture(), any());
@@ -559,9 +546,9 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
-    Exception exception = assertThrows(ServiceUnavailableException.class,
-        () -> projectDao.delete(expected.getId()));
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, validUriString, testToken);
+    Exception exception = assertThrows(ServiceUnavailable.class,
+        () -> projectDao.delete(expected.id()));
 
     String expectedMessage = String.format("Status: %d Body:", HttpStatus.SC_INTERNAL_SERVER_ERROR);
     String actualMessage = exception.getMessage();
@@ -580,13 +567,11 @@ public class ProjectDaoTest implements IBaseDaoTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(expected));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
     final String invalidUriString = "http://finance.yahoo.com/q/h?s=^IXIC";
-    when(mockedDotenv.get("PROJECT_URI")).thenReturn(invalidUriString);
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, mockedDotenv);
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, invalidUriString, testToken);
     Exception exception = assertThrows(RuntimeException.class,
-        () -> projectDao.delete(expected.getId()));
+        () -> projectDao.delete(expected.id()));
 
     String expectedMessage = "URISyntaxException";
     String actualMessage = exception.getMessage();
@@ -601,9 +586,9 @@ public class ProjectDaoTest implements IBaseDaoTest {
 
     when(mockedHttpClient.send(any(), any())).thenThrow(new IOException("Bad Beef"));
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, validUriString, testToken);
     Exception exception = assertThrows(RuntimeException.class,
-        () -> projectDao.delete(expected.getId()));
+        () -> projectDao.delete(expected.id()));
 
     String expectedMessage = "Bad Beef";
     String actualMessage = exception.getMessage();
@@ -618,9 +603,9 @@ public class ProjectDaoTest implements IBaseDaoTest {
 
     when(mockedHttpClient.send(any(), any())).thenThrow(new InterruptedException("Bad Beef"));
 
-    ProjectDao projectDao = new ProjectDao(mockedHttpClient, Dotenv.load());
+    ProjectDao projectDao = new ProjectDao(mockedHttpClient, validUriString, testToken);
     Exception exception = assertThrows(RuntimeException.class,
-        () -> projectDao.delete(expected.getId()));
+        () -> projectDao.delete(expected.id()));
 
     String expectedMessage = "Bad Beef";
     String actualMessage = exception.getMessage();
@@ -629,8 +614,8 @@ public class ProjectDaoTest implements IBaseDaoTest {
   }
 
   static Project buildTestProject() {
-    return Project.builder().id(1).name("name").color(Colors.BLUE).parent_id(1).order(1)
-        .comment_count(1).shared(true).favorite(true).inbox_project(true).team_inbox(true)
-        .sync_id(1).url("url").build();
+    return Project.builder().id(1).name("name").color(Color.BLUE).parentId(1).order(1)
+        .commentCount(1).shared(true).favorite(true).inboxProject(true).teamInbox(true)
+        .syncId(1).url("url").build();
   }
 }

@@ -1,24 +1,23 @@
-package com.rjesquivias.todoist.dao;
+package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjesquivias.todoist.domain.Comment;
-import com.rjesquivias.todoist.util.http.HttpRequestFactory;
-import com.rjesquivias.todoist.util.http.HttpRequestHelper;
-import io.github.cdimascio.dotenv.Dotenv;
+
 import java.net.http.HttpRequest;
 import java.util.Collection;
 import java.util.logging.Logger;
+import static com.rjesquivias.todoist.Predicates.*;
 
-public class CommentDao implements ICommentDao {
+final class CommentDao implements ICommentDao {
 
   private final String baseUri;
   private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
   private final HttpRequestFactory httpRequestFactory;
   private final HttpRequestHelper httpRequestHelper;
 
-  public CommentDao(HttpRequestHelper httpRequestHelper, Dotenv dotenv) {
-    this.baseUri = dotenv.get("COMMENT_URI");
-    this.httpRequestFactory = new HttpRequestFactory(dotenv.get("TODOIST_API_TOKEN"),
+  public CommentDao(HttpRequestHelper httpRequestHelper, String commentURI, String apiToken) {
+    this.baseUri = commentURI;
+    this.httpRequestFactory = new HttpRequestFactory(apiToken,
         new ObjectMapper());
     this.httpRequestHelper = httpRequestHelper;
   }

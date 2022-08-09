@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.stream.Stream;
 
-public enum Colors {
+public enum Color {
   BERRY_RED(30),
   RED(31),
   ORANGE(32),
@@ -26,9 +26,9 @@ public enum Colors {
   GREY(48),
   TAUPE(49);
 
-  private long id;
+  private final long id;
 
-  private Colors(long id) {
+  Color(long id) {
     this.id = id;
   }
 
@@ -38,7 +38,7 @@ public enum Colors {
   }
 
   @JsonCreator
-  static Colors fromId(int id) {
-    return Stream.of(Colors.values()).filter(color -> color.id == id).findFirst().get();
+  static Color fromId(int id) {
+    return Stream.of(Color.values()).filter(color -> color.id == id).findFirst().get();
   }
 }

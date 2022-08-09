@@ -1,14 +1,14 @@
-package com.rjesquivias.todoist.dao;
+package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.rjesquivias.todoist.domain.Colors;
+import com.rjesquivias.todoist.domain.Color;
 import com.rjesquivias.todoist.domain.Label;
 import java.util.Collection;
 import lombok.Builder;
 import lombok.Data;
 
-public interface ILabelDao extends IBaseDao {
+interface ILabelDao {
 
   Collection<Label> getAll();
 
@@ -21,7 +21,7 @@ public interface ILabelDao extends IBaseDao {
 
     private String name = null;
     private Long order = null;
-    private Colors color = null;
+    private Color color = null;
     private Boolean favorite = null;
   }
 
@@ -36,7 +36,7 @@ public interface ILabelDao extends IBaseDao {
 
     private String name = null;
     private Long order = null;
-    private Colors color = null;
+    private Color color = null;
     private Boolean favorite = null;
   }
 

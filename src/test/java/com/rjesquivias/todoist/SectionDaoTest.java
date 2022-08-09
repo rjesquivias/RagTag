@@ -1,29 +1,23 @@
-package com.rjesquivias.todoist.dao;
+package com.rjesquivias.todoist;
 
-import static com.rjesquivias.todoist.dao.SectionDao.noContentPredicate;
-import static com.rjesquivias.todoist.dao.SectionDao.okPredicate;
+import static com.rjesquivias.todoist.Predicates.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.rjesquivias.todoist.domain.Section;
-import com.rjesquivias.todoist.util.http.HttpRequestHelper;
-import com.rjesquivias.todoist.util.http.ResponsePredicate;
-import io.github.cdimascio.dotenv.Dotenv;
+
 import java.net.http.HttpRequest;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-public class SectionDaoTest implements IBaseDaoTest {
+import static com.rjesquivias.todoist.TestConstants.*;
+public class SectionDaoTest {
 
   @Test
   public void whenGetAll_callsHttpRequestHelperWithCorrectArguments() {
     HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
-    when(mockedDotenv.get("SECTION_URI")).thenReturn(validUriString);
-    when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
-    SectionDao sectionDao = new SectionDao(mockedHttpRequestHelper, mockedDotenv);
+    SectionDao sectionDao = new SectionDao(mockedHttpRequestHelper, validUriString, testToken);
 
     sectionDao.getAll();
 
@@ -44,10 +38,7 @@ public class SectionDaoTest implements IBaseDaoTest {
   @Test
   public void whenGetAll_withProjectId_callsHttpRequestHelperWithCorrectArguments() {
     HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
-    when(mockedDotenv.get("SECTION_URI")).thenReturn(validUriString);
-    when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
-    SectionDao sectionDao = new SectionDao(mockedHttpRequestHelper, mockedDotenv);
+    SectionDao sectionDao = new SectionDao(mockedHttpRequestHelper, validUriString, testToken);
 
     sectionDao.getAll(testProjectId);
 
@@ -69,10 +60,7 @@ public class SectionDaoTest implements IBaseDaoTest {
   @Test
   public void whenCreate_callsHttpRequestHelperWithCorrectArguments() {
     HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
-    when(mockedDotenv.get("SECTION_URI")).thenReturn(validUriString);
-    when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
-    SectionDao sectionDao = new SectionDao(mockedHttpRequestHelper, mockedDotenv);
+    SectionDao sectionDao = new SectionDao(mockedHttpRequestHelper, validUriString, testToken);
 
     sectionDao.create(createSectionArgs);
 
@@ -95,10 +83,7 @@ public class SectionDaoTest implements IBaseDaoTest {
   @Test
   public void whenGet_callsHttpRequestHelperWithCorrectArguments() {
     HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
-    when(mockedDotenv.get("SECTION_URI")).thenReturn(validUriString);
-    when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
-    SectionDao sectionDao = new SectionDao(mockedHttpRequestHelper, mockedDotenv);
+    SectionDao sectionDao = new SectionDao(mockedHttpRequestHelper, validUriString, testToken);
 
     sectionDao.get(testSectionId);
 
@@ -120,10 +105,7 @@ public class SectionDaoTest implements IBaseDaoTest {
   @Test
   public void whenUpdate_callsHttpRequestHelperWithCorrectArguments() {
     HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
-    when(mockedDotenv.get("SECTION_URI")).thenReturn(validUriString);
-    when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
-    SectionDao sectionDao = new SectionDao(mockedHttpRequestHelper, mockedDotenv);
+    SectionDao sectionDao = new SectionDao(mockedHttpRequestHelper, validUriString, testToken);
 
     sectionDao.update(testSectionId, testUpdatedSectionName);
 
@@ -146,10 +128,7 @@ public class SectionDaoTest implements IBaseDaoTest {
   @Test
   public void whenDelete_callsHttpRequestHelperWithCorrectArguments() {
     HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
-    when(mockedDotenv.get("SECTION_URI")).thenReturn(validUriString);
-    when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
-    SectionDao sectionDao = new SectionDao(mockedHttpRequestHelper, mockedDotenv);
+    SectionDao sectionDao = new SectionDao(mockedHttpRequestHelper, validUriString, testToken);
 
     sectionDao.delete(testSectionId);
 

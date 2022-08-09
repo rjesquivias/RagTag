@@ -1,24 +1,24 @@
-package com.rjesquivias.todoist.dao;
+package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjesquivias.todoist.domain.Section;
-import com.rjesquivias.todoist.util.http.HttpRequestFactory;
-import com.rjesquivias.todoist.util.http.HttpRequestHelper;
-import io.github.cdimascio.dotenv.Dotenv;
+
 import java.net.http.HttpRequest;
 import java.util.Collection;
 import java.util.logging.Logger;
 
-public class SectionDao implements ISectionDao {
+import static com.rjesquivias.todoist.Predicates.*;
+
+final class SectionDao implements ISectionDao {
 
   private final String baseUri;
   private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
   private final HttpRequestFactory httpRequestFactory;
   private final HttpRequestHelper httpRequestHelper;
 
-  public SectionDao(HttpRequestHelper httpRequestHelper, Dotenv dotenv) {
-    this.baseUri = dotenv.get("SECTION_URI");
-    this.httpRequestFactory = new HttpRequestFactory(dotenv.get("TODOIST_API_TOKEN"),
+  public SectionDao(HttpRequestHelper httpRequestHelper, String sectionUri, String apiToken) {
+    this.baseUri = sectionUri;
+    this.httpRequestFactory = new HttpRequestFactory(apiToken,
         new ObjectMapper());
     this.httpRequestHelper = httpRequestHelper;
   }

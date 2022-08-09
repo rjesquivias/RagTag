@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
-import com.google.common.collect.ImmutableList;
 import com.rjesquivias.todoist.dao.IProjectDao.CreateArgs;
 import com.rjesquivias.todoist.domain.Project;
 import com.rjesquivias.todoist.domain.Section;
@@ -24,7 +23,7 @@ public class SectionDaoIntegrationTest {
       Dotenv.load());
 
   private static final String projectName = "INT_TEST_PROJECT_NAME";
-  private static final Collection<String> sectionNames = ImmutableList.of("INT_TEST_SECTION_1",
+  private static final Collection<String> sectionNames = List.of("INT_TEST_SECTION_1",
       "INT_TEST_SECTION_2", "INT_TEST_SECTION_3", "INT_TEST_SECTION_4");
 
   private static final String sectionOne = "INT_TEST_SECTION_1";

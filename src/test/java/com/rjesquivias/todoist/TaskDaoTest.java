@@ -1,31 +1,26 @@
-package com.rjesquivias.todoist.dao;
+package com.rjesquivias.todoist;
 
-import static com.rjesquivias.todoist.dao.IBaseDao.noContentPredicate;
-import static com.rjesquivias.todoist.dao.IBaseDao.okPredicate;
+import static com.rjesquivias.todoist.Predicates.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-import com.rjesquivias.todoist.domain.Comment;
-import com.rjesquivias.todoist.util.http.HttpRequestHelper;
-import com.rjesquivias.todoist.util.http.ResponsePredicate;
-import io.github.cdimascio.dotenv.Dotenv;
+import com.rjesquivias.todoist.ITaskDao.UpdateArgs;
+import com.rjesquivias.todoist.domain.Task;
+
 import java.net.http.HttpRequest;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-public class CommentDaoTest implements IBaseDaoTest {
+import static com.rjesquivias.todoist.TestConstants.*;
+public class TaskDaoTest {
 
   @Test
-  public void whenGetAllInProject_callsHttpRequestHelperWithCorrectArguments() {
+  public void whenGetAllActive_callsHttpRequestHelperWithCorrectArguments() {
     HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
-    when(mockedDotenv.get("COMMENT_URI")).thenReturn(validUriString);
-    when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
-    CommentDao commentDao = new CommentDao(mockedHttpRequestHelper, mockedDotenv);
+    TaskDao taskDao = new TaskDao(mockedHttpRequestHelper, validUriString, testToken);
 
-    commentDao.getAllInProject(testProjectId);
+    taskDao.getAllActive(getAllActiveTaskArgs);
 
     ArgumentCaptor<HttpRequest> requestArgumentCaptor = ArgumentCaptor.forClass(HttpRequest.class);
     ArgumentCaptor<ResponsePredicate> responsePredicateArgumentCaptor = ArgumentCaptor.forClass(
@@ -35,49 +30,18 @@ public class CommentDaoTest implements IBaseDaoTest {
     verify(mockedHttpRequestHelper).makeCollectionRequest(requestArgumentCaptor.capture(),
         responsePredicateArgumentCaptor.capture(), classArgumentCaptor.capture());
 
-    HttpRequest expectedHttpRequest = httpRequestFactory.buildGet(
-        String.format("%s?project_id=%d", validUriString, testProjectId));
-
+    HttpRequest expectedHttpRequest = httpRequestFactory.buildGet(validUriString);
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Comment.class, classArgumentCaptor.getValue());
-  }
-
-  @Test
-  public void whenGetAllInTask_callsHttpRequestHelperWithCorrectArguments() {
-    HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
-    when(mockedDotenv.get("COMMENT_URI")).thenReturn(validUriString);
-    when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
-    CommentDao commentDao = new CommentDao(mockedHttpRequestHelper, mockedDotenv);
-
-    commentDao.getAllInTask(testTaskId);
-
-    ArgumentCaptor<HttpRequest> requestArgumentCaptor = ArgumentCaptor.forClass(HttpRequest.class);
-    ArgumentCaptor<ResponsePredicate> responsePredicateArgumentCaptor = ArgumentCaptor.forClass(
-        ResponsePredicate.class);
-    ArgumentCaptor<Class> classArgumentCaptor = ArgumentCaptor.forClass(Class.class);
-
-    verify(mockedHttpRequestHelper).makeCollectionRequest(requestArgumentCaptor.capture(),
-        responsePredicateArgumentCaptor.capture(), classArgumentCaptor.capture());
-
-    HttpRequest expectedHttpRequest = httpRequestFactory.buildGet(
-        String.format("%s?task_id=%d", validUriString, testTaskId));
-
-    assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
-    assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Comment.class, classArgumentCaptor.getValue());
+    assertEquals(Task.class, classArgumentCaptor.getValue());
   }
 
   @Test
   public void whenCreate_callsHttpRequestHelperWithCorrectArguments() {
     HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
-    when(mockedDotenv.get("COMMENT_URI")).thenReturn(validUriString);
-    when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
-    CommentDao commentDao = new CommentDao(mockedHttpRequestHelper, mockedDotenv);
+    TaskDao taskDao = new TaskDao(mockedHttpRequestHelper, validUriString, testToken);
 
-    commentDao.create(createCommentArgs);
+    taskDao.create(createTaskArgs);
 
     ArgumentCaptor<HttpRequest> requestArgumentCaptor = ArgumentCaptor.forClass(HttpRequest.class);
     ArgumentCaptor<ResponsePredicate> responsePredicateArgumentCaptor = ArgumentCaptor.forClass(
@@ -87,23 +51,18 @@ public class CommentDaoTest implements IBaseDaoTest {
     verify(mockedHttpRequestHelper).makeRequest(requestArgumentCaptor.capture(),
         responsePredicateArgumentCaptor.capture(), classArgumentCaptor.capture());
 
-    HttpRequest expectedHttpRequest = httpRequestFactory.buildPost(validUriString,
-        createCommentArgs);
-
+    HttpRequest expectedHttpRequest = httpRequestFactory.buildPost(validUriString, createTaskArgs);
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Comment.class, classArgumentCaptor.getValue());
+    assertEquals(Task.class, classArgumentCaptor.getValue());
   }
 
   @Test
-  public void whenGet_callsHttpRequestHelperWithCorrectArguments() {
+  public void whenGetActive_callsHttpRequestHelperWithCorrectArguments() {
     HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
-    when(mockedDotenv.get("COMMENT_URI")).thenReturn(validUriString);
-    when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
-    CommentDao commentDao = new CommentDao(mockedHttpRequestHelper, mockedDotenv);
+    TaskDao taskDao = new TaskDao(mockedHttpRequestHelper, validUriString, testToken);
 
-    commentDao.get(testCommentId);
+    taskDao.getActive(testTaskId);
 
     ArgumentCaptor<HttpRequest> requestArgumentCaptor = ArgumentCaptor.forClass(HttpRequest.class);
     ArgumentCaptor<ResponsePredicate> responsePredicateArgumentCaptor = ArgumentCaptor.forClass(
@@ -113,22 +72,19 @@ public class CommentDaoTest implements IBaseDaoTest {
     verify(mockedHttpRequestHelper).makeRequest(requestArgumentCaptor.capture(),
         responsePredicateArgumentCaptor.capture(), classArgumentCaptor.capture());
 
-    HttpRequest expectedHttpRequest = httpRequestFactory.buildGet(validUriString + testCommentId);
+    HttpRequest expectedHttpRequest = httpRequestFactory.buildGet(validUriString + testTaskId);
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Comment.class, classArgumentCaptor.getValue());
+    assertEquals(Task.class, classArgumentCaptor.getValue());
   }
 
   @Test
   public void whenUpdate_callsHttpRequestHelperWithCorrectArguments() {
     HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
-    when(mockedDotenv.get("COMMENT_URI")).thenReturn(validUriString);
-    when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
-    CommentDao commentDao = new CommentDao(mockedHttpRequestHelper, mockedDotenv);
+    TaskDao taskDao = new TaskDao(mockedHttpRequestHelper, validUriString, testToken);
 
-    commentDao.update(testCommentId, testContent);
+    taskDao.update(testTaskId, UpdateArgs.builder().build());
 
     ArgumentCaptor<HttpRequest> requestArgumentCaptor = ArgumentCaptor.forClass(HttpRequest.class);
     ArgumentCaptor<ResponsePredicate> responsePredicateArgumentCaptor = ArgumentCaptor.forClass(
@@ -138,23 +94,65 @@ public class CommentDaoTest implements IBaseDaoTest {
     verify(mockedHttpRequestHelper).makeRequest(requestArgumentCaptor.capture(),
         responsePredicateArgumentCaptor.capture(), classArgumentCaptor.capture());
 
-    HttpRequest expectedHttpRequest = httpRequestFactory.buildPost(validUriString + testCommentId,
-        String.format("{\"content\": \"%s\"}", testContent));
+    HttpRequest expectedHttpRequest = httpRequestFactory.buildPost(validUriString + testTaskId, "");
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(noContentPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Comment.class, classArgumentCaptor.getValue());
+    assertEquals(Task.class, classArgumentCaptor.getValue());
+  }
+
+  @Test
+  public void whenClose_callsHttpRequestHelperWithCorrectArguments() {
+    HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
+    TaskDao taskDao = new TaskDao(mockedHttpRequestHelper, validUriString, testToken);
+
+    taskDao.close(testTaskId);
+
+    ArgumentCaptor<HttpRequest> requestArgumentCaptor = ArgumentCaptor.forClass(HttpRequest.class);
+    ArgumentCaptor<ResponsePredicate> responsePredicateArgumentCaptor = ArgumentCaptor.forClass(
+        ResponsePredicate.class);
+    ArgumentCaptor<Class> classArgumentCaptor = ArgumentCaptor.forClass(Class.class);
+
+    verify(mockedHttpRequestHelper).makeRequest(requestArgumentCaptor.capture(),
+        responsePredicateArgumentCaptor.capture(), classArgumentCaptor.capture());
+
+    HttpRequest expectedHttpRequest = httpRequestFactory.buildPost(
+        validUriString + testTaskId + "/close", "");
+
+    assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
+    assertEquals(noContentPredicate, responsePredicateArgumentCaptor.getValue());
+    assertEquals(Task.class, classArgumentCaptor.getValue());
+  }
+
+  @Test
+  public void whenReOpen_callsHttpRequestHelperWithCorrectArguments() {
+    HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
+    TaskDao taskDao = new TaskDao(mockedHttpRequestHelper, validUriString, testToken);
+
+    taskDao.reOpen(testTaskId);
+
+    ArgumentCaptor<HttpRequest> requestArgumentCaptor = ArgumentCaptor.forClass(HttpRequest.class);
+    ArgumentCaptor<ResponsePredicate> responsePredicateArgumentCaptor = ArgumentCaptor.forClass(
+        ResponsePredicate.class);
+    ArgumentCaptor<Class> classArgumentCaptor = ArgumentCaptor.forClass(Class.class);
+
+    verify(mockedHttpRequestHelper).makeRequest(requestArgumentCaptor.capture(),
+        responsePredicateArgumentCaptor.capture(), classArgumentCaptor.capture());
+
+    HttpRequest expectedHttpRequest = httpRequestFactory.buildPost(
+        validUriString + testTaskId + "/reopen", "");
+
+    assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
+    assertEquals(noContentPredicate, responsePredicateArgumentCaptor.getValue());
+    assertEquals(Task.class, classArgumentCaptor.getValue());
   }
 
   @Test
   public void whenDelete_callsHttpRequestHelperWithCorrectArguments() {
     HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
-    Dotenv mockedDotenv = Mockito.mock(Dotenv.class);
-    when(mockedDotenv.get("COMMENT_URI")).thenReturn(validUriString);
-    when(mockedDotenv.get("TODOIST_API_TOKEN")).thenReturn(testToken);
-    CommentDao commentDao = new CommentDao(mockedHttpRequestHelper, mockedDotenv);
+    TaskDao taskDao = new TaskDao(mockedHttpRequestHelper, validUriString, testToken);
 
-    commentDao.delete(testCommentId);
+    taskDao.delete(testTaskId);
 
     ArgumentCaptor<HttpRequest> requestArgumentCaptor = ArgumentCaptor.forClass(HttpRequest.class);
     ArgumentCaptor<ResponsePredicate> responsePredicateArgumentCaptor = ArgumentCaptor.forClass(
@@ -165,10 +163,10 @@ public class CommentDaoTest implements IBaseDaoTest {
         responsePredicateArgumentCaptor.capture(), classArgumentCaptor.capture());
 
     HttpRequest expectedHttpRequest = httpRequestFactory.buildDelete(
-        validUriString + testCommentId);
+        validUriString + testTaskId);
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(noContentPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Comment.class, classArgumentCaptor.getValue());
+    assertEquals(Task.class, classArgumentCaptor.getValue());
   }
 }

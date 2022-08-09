@@ -1,12 +1,12 @@
-package com.rjesquivias.todoist.dao;
+package com.rjesquivias.todoist;
 
-import com.rjesquivias.todoist.domain.Colors;
+import com.rjesquivias.todoist.domain.Color;
 import com.rjesquivias.todoist.domain.Project;
 import java.util.Collection;
 import lombok.Builder;
 import lombok.Data;
 
-public interface IProjectDao extends IBaseDao {
+interface IProjectDao {
 
   Collection<Project> getAll();
 
@@ -33,7 +33,7 @@ public interface IProjectDao extends IBaseDao {
   class UpdateArgs {
 
     private String name;
-    private Colors color;
+    private Color color;
     private boolean favorite;
   }
 }

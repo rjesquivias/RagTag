@@ -1,4 +1,4 @@
-package com.rjesquivias.todoist.util.http;
+package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,7 +7,7 @@ import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 
-public class HttpRequestFactory {
+final class HttpRequestFactory {
 
   private final String token;
   private final ObjectMapper objectMapper;

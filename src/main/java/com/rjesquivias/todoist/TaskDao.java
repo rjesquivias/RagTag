@@ -1,24 +1,24 @@
-package com.rjesquivias.todoist.dao;
+package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjesquivias.todoist.domain.Task;
-import com.rjesquivias.todoist.util.http.HttpRequestFactory;
-import com.rjesquivias.todoist.util.http.HttpRequestHelper;
-import io.github.cdimascio.dotenv.Dotenv;
+
 import java.net.http.HttpRequest;
 import java.util.Collection;
 import java.util.logging.Logger;
 
-public class TaskDao implements ITaskDao {
+import static com.rjesquivias.todoist.Predicates.*;
+
+final class TaskDao implements ITaskDao {
 
   private final String baseUri;
   private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
   private final HttpRequestFactory httpRequestFactory;
   private final HttpRequestHelper httpRequestHelper;
 
-  public TaskDao(HttpRequestHelper httpRequestHelper, Dotenv dotenv) {
-    this.baseUri = dotenv.get("TASK_URI");
-    this.httpRequestFactory = new HttpRequestFactory(dotenv.get("TODOIST_API_TOKEN"),
+  public TaskDao(HttpRequestHelper httpRequestHelper, String taskUri, String apiToken) {
+    this.baseUri = taskUri;
+    this.httpRequestFactory = new HttpRequestFactory(apiToken,
         new ObjectMapper());
     this.httpRequestHelper = httpRequestHelper;
   }

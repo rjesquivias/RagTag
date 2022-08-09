@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
-import com.google.common.collect.ImmutableList;
 import com.rjesquivias.todoist.dao.ICommentDao.CreateArgs;
 import com.rjesquivias.todoist.domain.Comment;
 import com.rjesquivias.todoist.domain.Project;
@@ -26,7 +25,7 @@ public class CommentDaoIntegrationTest {
       new HttpRequestHelper(HttpClient.newBuilder().build()),
       Dotenv.load());
   private static final String testprojectName = "INT_TEST_PROJECT_NAME_1";
-  private static final Collection<String> testContent = ImmutableList.of("INT_TEST_CONTENT_1",
+  private static final Collection<String> testContent = List.of("INT_TEST_CONTENT_1",
       "INT_TEST_CONTENT_2", "INT_TEST_CONTENT_3", "INT_TEST_CONTENT_4");
   private static final String testContentOne = "INT_TEST_CONTENT_1";
   private static final String testCommentContentOne = "INT_TEST_CONTENT_1";

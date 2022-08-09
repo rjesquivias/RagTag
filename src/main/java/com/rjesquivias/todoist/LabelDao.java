@@ -1,24 +1,24 @@
-package com.rjesquivias.todoist.dao;
+package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjesquivias.todoist.domain.Label;
-import com.rjesquivias.todoist.util.http.HttpRequestFactory;
-import com.rjesquivias.todoist.util.http.HttpRequestHelper;
-import io.github.cdimascio.dotenv.Dotenv;
+
 import java.net.http.HttpRequest;
 import java.util.Collection;
 import java.util.logging.Logger;
 
-public class LabelDao implements ILabelDao {
+import static com.rjesquivias.todoist.Predicates.*;
+
+final class LabelDao implements ILabelDao {
 
   private final String baseUri;
   private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
   private final HttpRequestFactory httpRequestFactory;
   private final HttpRequestHelper httpRequestHelper;
 
-  public LabelDao(HttpRequestHelper httpRequestHelper, Dotenv dotenv) {
-    this.baseUri = dotenv.get("LABEL_URI");
-    this.httpRequestFactory = new HttpRequestFactory(dotenv.get("TODOIST_API_TOKEN"),
+  public LabelDao(HttpRequestHelper httpRequestHelper, String labelUri, String apiToken) {
+    this.baseUri = labelUri;
+    this.httpRequestFactory = new HttpRequestFactory(apiToken,
         new ObjectMapper());
     this.httpRequestHelper = httpRequestHelper;
   }

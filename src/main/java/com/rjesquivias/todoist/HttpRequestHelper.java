@@ -1,8 +1,8 @@
-package com.rjesquivias.todoist.util.http;
+package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rjesquivias.todoist.exceptions.ServiceUnavailableException;
+import com.rjesquivias.todoist.exceptions.ServiceUnavailable;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -10,7 +10,7 @@ import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.List;
 
-public class HttpRequestHelper {
+class HttpRequestHelper {
 
   private final HttpClient client;
   private final ObjectMapper objectMapper;
@@ -38,7 +38,7 @@ public class HttpRequestHelper {
       if (predicate.isValid(response)) {
         return !response.body().isEmpty() ? objectMapper.readValue(response.body(), type) : null;
       } else {
-        throw new ServiceUnavailableException(
+        throw new ServiceUnavailable(
             String.format("Status: %d Body: %s", response.statusCode(), response.body()));
       }
     } catch (IOException | InterruptedException e) {

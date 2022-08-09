@@ -1,26 +1,24 @@
-package com.rjesquivias.todoist.dao;
+package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjesquivias.todoist.domain.Project;
-import com.rjesquivias.todoist.util.http.HttpRequestFactory;
-import com.rjesquivias.todoist.util.http.HttpRequestHelper;
-import io.github.cdimascio.dotenv.Dotenv;
+
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.util.Collection;
 import java.util.logging.Logger;
 import org.apache.http.HttpStatus;
 
-public class ProjectDao implements IProjectDao {
+final class ProjectDao implements IProjectDao {
 
   private final String baseUri;
   private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
   private final HttpRequestFactory httpRequestFactory;
   private final HttpRequestHelper httpRequestHelper;
 
-  public ProjectDao(HttpClient client, Dotenv dotenv) {
-    this.baseUri = dotenv.get("PROJECT_URI");
-    this.httpRequestFactory = new HttpRequestFactory(dotenv.get("TODOIST_API_TOKEN"),
+  public ProjectDao(HttpClient client, String projectUri, String apiToken) {
+    this.baseUri = projectUri;
+    this.httpRequestFactory = new HttpRequestFactory(apiToken,
         new ObjectMapper());
     this.httpRequestHelper = new HttpRequestHelper(client);
   }

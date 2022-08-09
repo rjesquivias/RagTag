@@ -1,4 +1,4 @@
-package com.rjesquivias.todoist.dao;
+package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -7,7 +7,7 @@ import java.util.Collection;
 import lombok.Builder;
 import lombok.Data;
 
-public interface ICommentDao extends IBaseDao {
+interface ICommentDao {
 
   Collection<Comment> getAllInProject(long projectId);
 

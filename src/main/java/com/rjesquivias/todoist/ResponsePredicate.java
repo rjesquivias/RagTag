@@ -4,5 +4,5 @@ import java.net.http.HttpResponse;
 
 interface ResponsePredicate {
 
-  boolean isValid(HttpResponse<?> response);
+    boolean isValid(HttpResponse<?> response);
 }

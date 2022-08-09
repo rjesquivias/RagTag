@@ -2,7 +2,6 @@ package com.rjesquivias.todoist.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
 import org.immutables.value.Value;
 
 
@@ -14,20 +13,21 @@ import org.immutables.value.Value;
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
 public sealed interface Section permits ImmutableSection {
-  long id();
+    long id();
 
-  @JsonProperty("project_id")
-  long projectId();
+    @JsonProperty("project_id")
+    long projectId();
 
-  long order();
+    long order();
 
-  String name();
+    String name();
 
-  static Builder builder() {
-    return new Builder();
-  }
+    static Builder builder() {
+        return new Builder();
+    }
 
-  final class Builder extends ImmutableSection.Builder {
-    Builder() {}
-  }
+    final class Builder extends ImmutableSection.Builder {
+        Builder() {
+        }
+    }
 }

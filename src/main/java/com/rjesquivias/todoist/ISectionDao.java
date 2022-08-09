@@ -3,31 +3,32 @@ package com.rjesquivias.todoist;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.rjesquivias.todoist.domain.Section;
-import java.util.Collection;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Collection;
+
 interface ISectionDao {
 
-  Collection<Section> getAll();
+    Collection<Section> getAll();
 
-  Collection<Section> getAll(long project_id);
+    Collection<Section> getAll(long project_id);
 
-  Section create(CreateArgs args);
+    Section create(CreateArgs args);
 
-  Section get(long id);
+    Section get(long id);
 
-  void update(long id, String name);
+    void update(long id, String name);
 
-  void delete(long id);
+    void delete(long id);
 
-  @Data
-  @Builder
-  @JsonInclude(Include.NON_NULL)
-  class CreateArgs {
+    @Data
+    @Builder
+    @JsonInclude(Include.NON_NULL)
+    class CreateArgs {
 
-    private String name = null;
-    private Long project_id = null;
-    private Long order = null;
-  }
+        private String name = null;
+        private Long project_id = null;
+        private Long order = null;
+    }
 }

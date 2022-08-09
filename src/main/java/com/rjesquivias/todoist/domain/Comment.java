@@ -2,10 +2,6 @@ package com.rjesquivias.todoist.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -16,20 +12,25 @@ import org.immutables.value.Value;
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
 public sealed interface Comment permits ImmutableComment {
-  long id();
-  @JsonProperty("task_id")
-  long taskId();
-  @JsonProperty("project_id")
-  long projectId();
-  String posted();
-  String content();
+    long id();
 
-  static Builder builder() {
-    return new Builder();
-  }
+    @JsonProperty("task_id")
+    long taskId();
 
-  final class Builder extends ImmutableComment.Builder {
-    Builder() {}
-  }
+    @JsonProperty("project_id")
+    long projectId();
+
+    String posted();
+
+    String content();
+
+    static Builder builder() {
+        return new Builder();
+    }
+
+    final class Builder extends ImmutableComment.Builder {
+        Builder() {
+        }
+    }
 }
 

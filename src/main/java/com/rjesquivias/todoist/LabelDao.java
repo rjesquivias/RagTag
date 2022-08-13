@@ -1,6 +1,7 @@
 package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rjesquivias.todoist.domain.ImmutableLabel;
 import com.rjesquivias.todoist.domain.Label;
 
 import java.net.http.HttpRequest;
@@ -28,34 +29,34 @@ final class LabelDao implements ILabelDao {
     public Collection<Label> getAll() {
         LOGGER.info("LabelDao::getAll()");
         HttpRequest request = httpRequestFactory.buildGet(baseUri);
-        return httpRequestHelper.makeCollectionRequest(request, okPredicate, Label.class);
+        return httpRequestHelper.makeCollectionRequest(request, okPredicate, ImmutableLabel.class);
     }
 
     @Override
     public Label create(CreateArgs args) {
         LOGGER.info("LabelDao::create(CreateArgs args)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri, args);
-        return httpRequestHelper.makeRequest(request, okPredicate, Label.class);
+        return httpRequestHelper.makeRequest(request, okPredicate, ImmutableLabel.class);
     }
 
     @Override
     public Label get(long id) {
         LOGGER.info("LabelDao::get(long id)");
         HttpRequest request = httpRequestFactory.buildGet(baseUri + id);
-        return httpRequestHelper.makeRequest(request, okPredicate, Label.class);
+        return httpRequestHelper.makeRequest(request, okPredicate, ImmutableLabel.class);
     }
 
     @Override
     public void update(long id, UpdateArgs args) {
         LOGGER.info("LabelDao::update(long id, UpdateArgs args)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri + id, args);
-        httpRequestHelper.makeRequest(request, noContentPredicate, Label.class);
+        httpRequestHelper.makeRequest(request, noContentPredicate, ImmutableLabel.class);
     }
 
     @Override
     public void delete(long id) {
         LOGGER.info("LabelDao::delete(long id)");
         HttpRequest request = httpRequestFactory.buildDelete(baseUri + id);
-        httpRequestHelper.makeRequest(request, noContentPredicate, Label.class);
+        httpRequestHelper.makeRequest(request, noContentPredicate, ImmutableLabel.class);
     }
 }

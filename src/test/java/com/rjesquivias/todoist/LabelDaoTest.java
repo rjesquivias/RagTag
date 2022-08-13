@@ -4,7 +4,7 @@ import static com.rjesquivias.todoist.Predicates.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
-import com.rjesquivias.todoist.domain.Label;
+import com.rjesquivias.todoist.domain.ImmutableLabel;
 
 import java.net.http.HttpRequest;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public final class LabelDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Label.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableLabel.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -55,7 +55,7 @@ public final class LabelDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Label.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableLabel.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -77,7 +77,7 @@ public final class LabelDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Label.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableLabel.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -100,7 +100,7 @@ public final class LabelDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(noContentPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Label.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableLabel.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -122,6 +122,6 @@ public final class LabelDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(noContentPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Label.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableLabel.class, classArgumentCaptor.getValue());
   }
 }

@@ -3,11 +3,10 @@ package com.rjesquivias.todoist;
 import static com.rjesquivias.todoist.Predicates.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import com.rjesquivias.todoist.domain.Comment;
 
 import java.net.http.HttpRequest;
+
+import com.rjesquivias.todoist.domain.ImmutableComment;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -36,7 +35,7 @@ public class CommentDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Comment.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableComment.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -59,7 +58,7 @@ public class CommentDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Comment.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableComment.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -82,7 +81,7 @@ public class CommentDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Comment.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableComment.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -104,7 +103,7 @@ public class CommentDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Comment.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableComment.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -127,7 +126,7 @@ public class CommentDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(noContentPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Comment.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableComment.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -150,6 +149,6 @@ public class CommentDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(noContentPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Comment.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableComment.class, classArgumentCaptor.getValue());
   }
 }

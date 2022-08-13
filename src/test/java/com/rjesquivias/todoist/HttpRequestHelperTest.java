@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjesquivias.todoist.domain.Color;
+import com.rjesquivias.todoist.domain.ImmutableProject;
 import com.rjesquivias.todoist.domain.Project;
 import com.rjesquivias.todoist.exceptions.ServiceUnavailable;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.net.http.HttpResponse;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.http.HttpStatus;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -93,6 +95,7 @@ public class HttpRequestHelperTest {
   public void whenRequest_happyPath_succeeds()
       throws IOException, InterruptedException {
     Project testProject = buildTestProject();
+    System.out.println(testProject.id());
 
     @SuppressWarnings("unchecked")
     HttpResponse<String> mockedResponse = Mockito.mock(HttpResponse.class);
@@ -101,9 +104,13 @@ public class HttpRequestHelperTest {
 
     HttpRequestHelper sut = new HttpRequestHelper(mockedHttpClient);
     HttpRequest request = httpRequestFactory.buildGet(testUri);
-    JavaType type = objectMapper.getTypeFactory().constructType(Project.class);
+    JavaType type = objectMapper.getTypeFactory().constructType(ImmutableProject.class);
 
-    Project response = sut.request(request, (r) -> true, type);
+    //Project response = sut.request(request, (r) -> true, type);
+
+    Project response = sut.makeRequest(request, (r) -> true, ImmutableProject.class);
+    System.out.println(objectMapper.writeValueAsString(testProject));
+    System.out.println(objectMapper.writeValueAsString(response));
 
     assertEquals(testProject, response);
   }
@@ -121,7 +128,7 @@ public class HttpRequestHelperTest {
     HttpRequestHelper sut = new HttpRequestHelper(mockedHttpClient);
     HttpRequest request = httpRequestFactory.buildGet(testUri);
 
-    Collection<Project> response = sut.makeCollectionRequest(request, (r) -> true, Project.class);
+    Collection<Project> response = sut.makeCollectionRequest(request, (r) -> true, ImmutableProject.class);
 
     assertEquals(testProjects, response);
   }
@@ -139,7 +146,7 @@ public class HttpRequestHelperTest {
     HttpRequestHelper sut = new HttpRequestHelper(mockedHttpClient);
     HttpRequest request = httpRequestFactory.buildGet(testUri);
 
-    Project response = sut.makeRequest(request, (r) -> true, Project.class);
+    Project response = sut.makeRequest(request, (r) -> true, ImmutableProject.class);
 
     assertEquals(testProject, response);
   }

@@ -3,7 +3,6 @@ package com.rjesquivias.todoist.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.immutables.value.Value;
 
-
 @Value.Immutable
 @Value.Style(
         builderVisibility = Value.Style.BuilderVisibility.PACKAGE,
@@ -11,22 +10,22 @@ import org.immutables.value.Value;
         overshadowImplementation = true
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
-public sealed interface Label permits ImmutableLabel {
-    long id();
+sealed interface Due permits ImmutableDue {
+    String string();
 
-    String name();
+    String date();
 
-    Color color();
+    boolean recurring();
 
-    long order();
+    String datetime();
 
-    boolean favorite();
+    String timezone();
 
-    static Builder builder() {
-        return new Builder();
+    static Due.Builder builder() {
+        return new Due.Builder();
     }
 
-    final class Builder extends ImmutableLabel.Builder {
+    final class Builder extends ImmutableDue.Builder {
         Builder() {
         }
     }

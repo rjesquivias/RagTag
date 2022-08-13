@@ -1,11 +1,11 @@
-package com.rjesquivias.todoist.dao;
+package com.rjesquivias.todoist;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
-import com.rjesquivias.todoist.dao.IProjectDao.CreateArgs;
-import com.rjesquivias.todoist.dao.IProjectDao.UpdateArgs;
-import com.rjesquivias.todoist.domain.Colors;
+import com.rjesquivias.todoist.IProjectDao.CreateArgs;
+import com.rjesquivias.todoist.IProjectDao.UpdateArgs;
+import com.rjesquivias.todoist.domain.Color;
 import com.rjesquivias.todoist.domain.Project;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.net.http.HttpClient;
@@ -14,8 +14,11 @@ import org.junit.Test;
 
 public class ProjectDaoIntegrationTest {
 
-  private static final IProjectDao projectDao = new ProjectDao(HttpClient.newBuilder().build(),
-      Dotenv.load());
+  private static final Dotenv dotenv = Dotenv.load();
+  private static final IProjectDao projectDao = new ProjectDao(
+          HttpClient.newBuilder().build(),
+          dotenv.get("PROJECT_URI"),
+          dotenv.get("TODOIST_API_TOKEN"));
 
   private static final String projectName = "INT_TEST_PROJECT_NAME";
 
@@ -28,50 +31,49 @@ public class ProjectDaoIntegrationTest {
         .findFirst().orElse(null);
 
     assertEquals(foundProject, testProject);
-    projectDao.delete(testProject.getId());
+    projectDao.delete(testProject.id());
   }
 
   @Test
   public void whenGet_returnsCorrectProject() {
     Project testProject = projectDao.create(CreateArgs.builder().name(projectName).build());
-    Project project = projectDao.get(testProject.getId());
+    Project project = projectDao.get(testProject.id());
     assertEquals(project, testProject);
-    projectDao.delete(testProject.getId());
+    projectDao.delete(testProject.id());
   }
 
   @Test
   public void whenCreate_objectIsCreatedSuccessfully() {
     Project createdProject = projectDao.create(CreateArgs.builder().name(projectName).build());
-    Project queriedProject = projectDao.get(createdProject.getId());
+    Project queriedProject = projectDao.get(createdProject.id());
 
     assertEquals(createdProject, queriedProject);
 
-    projectDao.delete(createdProject.getId());
+    projectDao.delete(createdProject.id());
   }
 
   @Test
   public void whenUpdate_objectIsUpdatedSuccessfully() {
     final String newProjectName = "UPDATED_INT_TEST_PROJECT_NAME";
     Project createdProject = projectDao.create(CreateArgs.builder().name(projectName).build());
-    projectDao.update(createdProject.getId(),
-        UpdateArgs.builder().name(newProjectName).color(Colors.BLUE).favorite(true).build());
-    Project queriedProject = projectDao.get(createdProject.getId());
+    projectDao.update(createdProject.id(),
+        UpdateArgs.builder().name(newProjectName).color(Color.BLUE).favorite(true).build());
+    Project queriedProject = projectDao.get(createdProject.id());
 
     assertNotEquals(createdProject, queriedProject);
-    createdProject.setName(newProjectName);
-    createdProject.setColor(Colors.BLUE);
-    createdProject.setFavorite(true);
-    assertEquals(createdProject, queriedProject);
+    assertEquals(newProjectName, queriedProject.name());
+    assertEquals(Color.BLUE, queriedProject.color());
+    assertEquals(true, queriedProject.favorite());
 
-    projectDao.delete(createdProject.getId());
+    projectDao.delete(createdProject.id());
   }
 
   @Test
   public void whenDelete_objectIsDeletedSuccessfully() throws InterruptedException {
     Project createdProject = projectDao.create(CreateArgs.builder().name(projectName).build());
-    Project queriedProject = projectDao.get(createdProject.getId());
+    Project queriedProject = projectDao.get(createdProject.id());
     assertEquals(createdProject, queriedProject);
 
-    projectDao.delete(createdProject.getId());
+    projectDao.delete(createdProject.id());
   }
 }

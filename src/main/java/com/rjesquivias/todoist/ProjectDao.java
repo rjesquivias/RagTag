@@ -1,6 +1,7 @@
 package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rjesquivias.todoist.domain.ImmutableProject;
 import com.rjesquivias.todoist.domain.Project;
 import org.apache.http.HttpStatus;
 
@@ -28,7 +29,7 @@ final class ProjectDao implements IProjectDao {
         LOGGER.info("ProjectDao::getAll()");
         HttpRequest request = httpRequestFactory.buildGet(baseUri);
         return httpRequestHelper.makeCollectionRequest(request,
-                response -> response.statusCode() == HttpStatus.SC_OK, Project.class);
+                response -> response.statusCode() == HttpStatus.SC_OK, ImmutableProject.class);
     }
 
     @Override
@@ -36,7 +37,7 @@ final class ProjectDao implements IProjectDao {
         LOGGER.info("ProjectDao::get(long id)");
         HttpRequest request = httpRequestFactory.buildGet(baseUri + id);
         return httpRequestHelper.makeRequest(request,
-                response -> response.statusCode() == HttpStatus.SC_OK, Project.class);
+                response -> response.statusCode() == HttpStatus.SC_OK, ImmutableProject.class);
     }
 
     @Override
@@ -44,7 +45,7 @@ final class ProjectDao implements IProjectDao {
         LOGGER.info("ProjectDao::create(CreateArgs args)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri, args);
         return httpRequestHelper.makeRequest(request,
-                response -> response.statusCode() == HttpStatus.SC_OK, Project.class);
+                response -> response.statusCode() == HttpStatus.SC_OK, ImmutableProject.class);
     }
 
     @Override
@@ -52,7 +53,7 @@ final class ProjectDao implements IProjectDao {
         LOGGER.info("ProjectDao::update(UpdateArgs args)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri + id, args);
         httpRequestHelper.makeRequest(request,
-                response -> response.statusCode() == HttpStatus.SC_NO_CONTENT, Project.class);
+                response -> response.statusCode() == HttpStatus.SC_NO_CONTENT, ImmutableProject.class);
     }
 
     @Override
@@ -60,6 +61,6 @@ final class ProjectDao implements IProjectDao {
         LOGGER.info("ProjectDao::delete(long id)");
         HttpRequest request = httpRequestFactory.buildDelete(baseUri + id);
         httpRequestHelper.makeRequest(request,
-                response -> response.statusCode() == HttpStatus.SC_NO_CONTENT, Project.class);
+                response -> response.statusCode() == HttpStatus.SC_NO_CONTENT, ImmutableProject.class);
     }
 }

@@ -1,29 +1,34 @@
-package com.rjesquivias.todoist.dao;
+package com.rjesquivias.todoist;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
-import com.rjesquivias.todoist.dao.ICommentDao.CreateArgs;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rjesquivias.todoist.domain.Comment;
 import com.rjesquivias.todoist.domain.Project;
 import com.rjesquivias.todoist.domain.Task;
-import com.rjesquivias.todoist.util.http.HttpRequestHelper;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.net.http.HttpClient;
 import java.util.Collection;
+import java.util.List;
+
 import org.junit.Test;
 
 public class CommentDaoIntegrationTest {
-
-  private static final IProjectDao projectDao = new ProjectDao(HttpClient.newBuilder().build(),
-      Dotenv.load());
+  private static final Dotenv dotenv = Dotenv.load();
+  private static final IProjectDao projectDao = new ProjectDao(
+          HttpClient.newBuilder().build(),
+          dotenv.get("PROJECT_URI"),
+          dotenv.get("TODOIST_API_TOKEN"));
   private static final ITaskDao taskDao = new TaskDao(
       new HttpRequestHelper(HttpClient.newBuilder().build()),
-      Dotenv.load());
+          dotenv.get("TASK_URI"),
+          dotenv.get("TODOIST_API_TOKEN"));
   private static final ICommentDao commentDao = new CommentDao(
       new HttpRequestHelper(HttpClient.newBuilder().build()),
-      Dotenv.load());
+          dotenv.get("COMMENT_URI"),
+          dotenv.get("TODOIST_API_TOKEN"));
   private static final String testprojectName = "INT_TEST_PROJECT_NAME_1";
   private static final Collection<String> testContent = List.of("INT_TEST_CONTENT_1",
       "INT_TEST_CONTENT_2", "INT_TEST_CONTENT_3", "INT_TEST_CONTENT_4");
@@ -39,21 +44,21 @@ public class CommentDaoIntegrationTest {
 
     for (String content : testContent) {
       commentDao.create(
-          CreateArgs.builder().project_id(project.getId()).content(content).build());
+          ICommentDao.CreateArgs.builder().project_id(project.id()).content(content).build());
     }
 
-    Collection<Comment> comments = commentDao.getAllInProject(project.getId());
+    Collection<Comment> comments = commentDao.getAllInProject(project.id());
 
     for (String content : testContent) {
       Comment foundComment = comments.stream()
-          .filter(comment -> comment.getContent().equals(content))
+          .filter(comment -> comment.content().equals(content))
           .findFirst().orElse(null);
       assertNotNull(foundComment);
 
-      commentDao.delete(foundComment.getId());
+      commentDao.delete(foundComment.id());
     }
 
-    projectDao.delete(project.getId());
+    projectDao.delete(project.id());
   }
 
   @Test
@@ -62,76 +67,76 @@ public class CommentDaoIntegrationTest {
 
     for (String content : testContent) {
       commentDao.create(
-          CreateArgs.builder().task_id(task.getId()).content(content).build());
+          ICommentDao.CreateArgs.builder().task_id(task.id()).content(content).build());
     }
 
-    Collection<Comment> comments = commentDao.getAllInTask(task.getId());
+    Collection<Comment> comments = commentDao.getAllInTask(task.id());
 
     for (String content : testContent) {
       Comment foundComment = comments.stream()
-          .filter(comment -> comment.getContent().equals(content))
+          .filter(comment -> comment.content().equals(content))
           .findFirst().orElse(null);
       assertNotNull(foundComment);
 
-      commentDao.delete(foundComment.getId());
+      commentDao.delete(foundComment.id());
     }
 
-    taskDao.delete(task.getId());
+    taskDao.delete(task.id());
   }
 
   @Test
-  public void whenCreate_returnsCreatedComment() {
+  public void whenCreate_returnsCreatedComment() throws JsonProcessingException {
     Task task = taskDao.create(ITaskDao.CreateArgs.builder().content(testContentOne).build());
     Comment comment = commentDao.create(
-        CreateArgs.builder().task_id(task.getId()).content(testCommentContentOne).build());
+        ICommentDao.CreateArgs.builder().task_id(task.id()).content(testCommentContentOne).build());
 
-    Comment queriedComment = commentDao.get(comment.getId());
+    Comment queriedComment = commentDao.get(comment.id());
 
     assertEquals(comment, queriedComment);
 
-    commentDao.delete(comment.getId());
-    taskDao.delete(task.getId());
+    commentDao.delete(comment.id());
+    taskDao.delete(task.id());
   }
 
   @Test
   public void whenGet_returnsComment() {
     Task task = taskDao.create(ITaskDao.CreateArgs.builder().content(testContentOne).build());
     Comment comment = commentDao.create(
-        CreateArgs.builder().task_id(task.getId()).content(testCommentContentOne).build());
+        ICommentDao.CreateArgs.builder().task_id(task.id()).content(testCommentContentOne).build());
 
-    Comment queriedComment = commentDao.get(comment.getId());
+    Comment queriedComment = commentDao.get(comment.id());
 
     assertEquals(comment, queriedComment);
 
-    commentDao.delete(comment.getId());
-    taskDao.delete(task.getId());
+    commentDao.delete(comment.id());
+    taskDao.delete(task.id());
   }
 
   @Test
   public void whenUpdate_returnsUpdatedComment() {
     Task task = taskDao.create(ITaskDao.CreateArgs.builder().content(testContentOne).build());
     Comment comment = commentDao.create(
-        CreateArgs.builder().task_id(task.getId()).content(testCommentContentOne).build());
+        ICommentDao.CreateArgs.builder().task_id(task.id()).content(testCommentContentOne).build());
 
-    Comment queriedComment = commentDao.get(comment.getId());
+    Comment queriedComment = commentDao.get(comment.id());
     assertEquals(comment, queriedComment);
 
-    commentDao.update(comment.getId(), testCommentContentTwo);
-    queriedComment = commentDao.get(comment.getId());
+    commentDao.update(comment.id(), testCommentContentTwo);
+    queriedComment = commentDao.get(comment.id());
 
-    assertNotEquals(comment.getContent(), queriedComment.getContent());
-    assertEquals(testCommentContentTwo, queriedComment.getContent());
+    assertNotEquals(comment.content(), queriedComment.content());
+    assertEquals(testCommentContentTwo, queriedComment.content());
 
-    commentDao.delete(comment.getId());
-    taskDao.delete(task.getId());
+    commentDao.delete(comment.id());
+    taskDao.delete(task.id());
   }
 
   @Test
   public void whenDelete_commentIsDeleted() {
     Task task = taskDao.create(ITaskDao.CreateArgs.builder().content(testContentOne).build());
     Comment comment = commentDao.create(
-        CreateArgs.builder().task_id(task.getId()).content(testCommentContentOne).build());
-    commentDao.delete(comment.getId());
-    taskDao.delete(task.getId());
+        ICommentDao.CreateArgs.builder().task_id(task.id()).content(testCommentContentOne).build());
+    commentDao.delete(comment.id());
+    taskDao.delete(task.id());
   }
 }

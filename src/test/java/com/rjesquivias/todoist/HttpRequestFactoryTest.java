@@ -28,7 +28,7 @@ public class HttpRequestFactoryTest {
   }
 
   @Test
-  public void whenBuildPost_givenJson_throwsRuntimeException() throws JsonProcessingException {
+  public void whenBuildPost_givenInvalidJson_throwsRuntimeException() throws JsonProcessingException {
     ObjectMapper objectMapper = Mockito.spy(new ObjectMapper());
     Mockito.when(objectMapper.writeValueAsString(any()))
         .thenThrow(new JsonProcessingException("") {

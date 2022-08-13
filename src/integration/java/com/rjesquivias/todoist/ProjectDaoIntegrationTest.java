@@ -16,7 +16,7 @@ public class ProjectDaoIntegrationTest {
 
   private static final Dotenv dotenv = Dotenv.load();
   private static final IProjectDao projectDao = new ProjectDao(
-          HttpClient.newBuilder().build(),
+          new HttpRequestHelper(HttpClient.newBuilder().build()),
           dotenv.get("PROJECT_URI"),
           dotenv.get("TODOIST_API_TOKEN"));
 

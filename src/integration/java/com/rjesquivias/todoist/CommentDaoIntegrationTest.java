@@ -18,15 +18,15 @@ import org.junit.Test;
 public class CommentDaoIntegrationTest {
   private static final Dotenv dotenv = Dotenv.load();
   private static final IProjectDao projectDao = new ProjectDao(
-          HttpClient.newBuilder().build(),
+          new HttpRequestHelper(HttpClient.newBuilder().build()),
           dotenv.get("PROJECT_URI"),
           dotenv.get("TODOIST_API_TOKEN"));
   private static final ITaskDao taskDao = new TaskDao(
-      new HttpRequestHelper(HttpClient.newBuilder().build()),
+          new HttpRequestHelper(HttpClient.newBuilder().build()),
           dotenv.get("TASK_URI"),
           dotenv.get("TODOIST_API_TOKEN"));
   private static final ICommentDao commentDao = new CommentDao(
-      new HttpRequestHelper(HttpClient.newBuilder().build()),
+          new HttpRequestHelper(HttpClient.newBuilder().build()),
           dotenv.get("COMMENT_URI"),
           dotenv.get("TODOIST_API_TOKEN"));
   private static final String testprojectName = "INT_TEST_PROJECT_NAME_1";

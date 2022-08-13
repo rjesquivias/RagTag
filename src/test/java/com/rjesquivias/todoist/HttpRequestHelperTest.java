@@ -104,13 +104,8 @@ public class HttpRequestHelperTest {
 
     HttpRequestHelper sut = new HttpRequestHelper(mockedHttpClient);
     HttpRequest request = httpRequestFactory.buildGet(testUri);
-    JavaType type = objectMapper.getTypeFactory().constructType(ImmutableProject.class);
-
-    //Project response = sut.request(request, (r) -> true, type);
 
     Project response = sut.makeRequest(request, (r) -> true, ImmutableProject.class);
-    System.out.println(objectMapper.writeValueAsString(testProject));
-    System.out.println(objectMapper.writeValueAsString(response));
 
     assertEquals(testProject, response);
   }

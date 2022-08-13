@@ -23,7 +23,7 @@ public class SectionDaoIntegrationTest {
           dotenv.get("TODOIST_API_TOKEN"));
 
   private static final IProjectDao projectDao = new ProjectDao(
-          HttpClient.newBuilder().build(),
+          new HttpRequestHelper(HttpClient.newBuilder().build()),
           dotenv.get("PROJECT_URI"),
           dotenv.get("TODOIST_API_TOKEN"));
 
@@ -50,9 +50,8 @@ public class SectionDaoIntegrationTest {
       Section foundSection = sections.stream().filter(section -> section.name().equals(name))
           .findFirst().orElse(null);
       assertNotNull(foundSection);
-
-      projectDao.delete(testProject.id());
     }
+    projectDao.delete(testProject.id());
   }
 
   @Test
@@ -70,9 +69,8 @@ public class SectionDaoIntegrationTest {
       Section foundSection = sections.stream().filter(section -> section.name().equals(name))
           .findFirst().orElse(null);
       assertNotNull(foundSection);
-
-      projectDao.delete(testProject.id());
     }
+    projectDao.delete(testProject.id());
   }
 
   @Test

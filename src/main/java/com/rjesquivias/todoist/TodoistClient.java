@@ -19,7 +19,7 @@ public class TodoistClient {
         HttpRequestHelper requestHelper = new HttpRequestHelper(HttpClient.newBuilder().build());
 
         return TodoistClient.builder()
-                .projectDao(new ProjectDao(HttpClient.newBuilder().build(), baseUrl + "/rest/v1/projects/", apiToken))
+                .projectDao(new ProjectDao(requestHelper, baseUrl + "/rest/v1/projects/", apiToken))
                 .sectionDao(new SectionDao(requestHelper, baseUrl + "/rest/v1/sections/", apiToken))
                 .taskDao(new TaskDao(requestHelper, baseUrl + "/rest/v1/tasks/", apiToken))
                 .commentDao(new CommentDao(requestHelper, baseUrl + "/rest/v1/comments/", apiToken))

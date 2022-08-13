@@ -1,11 +1,11 @@
-package com.rjesquivias.todoist.domain;
+package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 @JsonDeserialize(builder = ImmutableLabel.Builder.class)
-public final class ImmutableLabel implements Label {
+final class ImmutableLabel implements Label {
     private final long id;
 
     private final String name;

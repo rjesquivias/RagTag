@@ -9,10 +9,6 @@ import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rjesquivias.todoist.domain.Color;
-import com.rjesquivias.todoist.domain.ImmutableProject;
-import com.rjesquivias.todoist.domain.Project;
-import com.rjesquivias.todoist.exceptions.ServiceUnavailable;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -20,7 +16,6 @@ import java.net.http.HttpResponse;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.http.HttpStatus;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -38,7 +33,7 @@ public class HttpRequestHelperTest {
       throws IOException, InterruptedException {
 
     when(mockedHttpClient.send(any(), any())).thenThrow(new IOException());
-    HttpRequestHelper sut = new HttpRequestHelper(mockedHttpClient);
+    HttpRequestHelper sut = HttpRequestHelper.build(mockedHttpClient);
     HttpRequest request = httpRequestFactory.buildGet(testUri);
     JavaType type = objectMapper.getTypeFactory().constructType(String.class);
 
@@ -51,7 +46,7 @@ public class HttpRequestHelperTest {
       throws IOException, InterruptedException {
 
     when(mockedHttpClient.send(any(), any())).thenThrow(new InterruptedException());
-    HttpRequestHelper sut = new HttpRequestHelper(mockedHttpClient);
+    HttpRequestHelper sut = HttpRequestHelper.build(mockedHttpClient);
     HttpRequest request = httpRequestFactory.buildGet(testUri);
     JavaType type = objectMapper.getTypeFactory().constructType(String.class);
 
@@ -66,11 +61,11 @@ public class HttpRequestHelperTest {
     HttpResponse<String> mockedResponse = Mockito.mock(HttpResponse.class);
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    HttpRequestHelper sut = new HttpRequestHelper(mockedHttpClient);
+    HttpRequestHelper sut = HttpRequestHelper.build(mockedHttpClient);
     HttpRequest request = httpRequestFactory.buildGet(testUri);
     JavaType type = objectMapper.getTypeFactory().constructType(String.class);
 
-    assertThrows(ServiceUnavailable.class,
+    assertThrows(ServiceUnavailableException.class,
         () -> sut.request(request, (r) -> false, type));
   }
 
@@ -82,7 +77,7 @@ public class HttpRequestHelperTest {
     when(mockedResponse.body()).thenReturn("");
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    HttpRequestHelper sut = new HttpRequestHelper(mockedHttpClient);
+    HttpRequestHelper sut = HttpRequestHelper.build(mockedHttpClient);
     HttpRequest request = httpRequestFactory.buildGet(testUri);
     JavaType type = objectMapper.getTypeFactory().constructType(String.class);
 
@@ -102,7 +97,7 @@ public class HttpRequestHelperTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(testProject));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    HttpRequestHelper sut = new HttpRequestHelper(mockedHttpClient);
+    HttpRequestHelper sut = HttpRequestHelper.build(mockedHttpClient);
     HttpRequest request = httpRequestFactory.buildGet(testUri);
 
     Project response = sut.makeRequest(request, (r) -> true, ImmutableProject.class);
@@ -120,7 +115,7 @@ public class HttpRequestHelperTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(testProjects));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    HttpRequestHelper sut = new HttpRequestHelper(mockedHttpClient);
+    HttpRequestHelper sut = HttpRequestHelper.build(mockedHttpClient);
     HttpRequest request = httpRequestFactory.buildGet(testUri);
 
     Collection<Project> response = sut.makeCollectionRequest(request, (r) -> true, ImmutableProject.class);
@@ -138,7 +133,7 @@ public class HttpRequestHelperTest {
     when(mockedResponse.body()).thenReturn(objectMapper.writeValueAsString(testProject));
     doReturn(mockedResponse).when(mockedHttpClient).send(any(), any());
 
-    HttpRequestHelper sut = new HttpRequestHelper(mockedHttpClient);
+    HttpRequestHelper sut = HttpRequestHelper.build(mockedHttpClient);
     HttpRequest request = httpRequestFactory.buildGet(testUri);
 
     Project response = sut.makeRequest(request, (r) -> true, ImmutableProject.class);

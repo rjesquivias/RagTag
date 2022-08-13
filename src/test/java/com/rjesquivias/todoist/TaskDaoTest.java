@@ -4,15 +4,13 @@ import static com.rjesquivias.todoist.Predicates.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
-import com.rjesquivias.todoist.ITaskDao.UpdateArgs;
-import com.rjesquivias.todoist.domain.ImmutableTask;
-
 import java.net.http.HttpRequest;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import static com.rjesquivias.todoist.TestConstants.*;
+@SuppressWarnings("rawtypes")
 public class TaskDaoTest {
 
   @Test
@@ -84,7 +82,7 @@ public class TaskDaoTest {
     HttpRequestHelper mockedHttpRequestHelper = Mockito.mock(HttpRequestHelper.class);
     TaskDao taskDao = new TaskDao(mockedHttpRequestHelper, validUriString, testToken);
 
-    taskDao.update(testTaskId, UpdateArgs.builder().build());
+    taskDao.update(testTaskId, Arguments.UpdateTaskArgs.builder().build());
 
     ArgumentCaptor<HttpRequest> requestArgumentCaptor = ArgumentCaptor.forClass(HttpRequest.class);
     ArgumentCaptor<ResponsePredicate> responsePredicateArgumentCaptor = ArgumentCaptor.forClass(

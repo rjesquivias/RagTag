@@ -1,8 +1,6 @@
 package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rjesquivias.todoist.domain.Comment;
-import com.rjesquivias.todoist.domain.ImmutableComment;
 
 import java.net.http.HttpRequest;
 import java.util.Collection;
@@ -42,7 +40,7 @@ final class CommentDao implements ICommentDao {
     }
 
     @Override
-    public Comment create(CreateArgs args) {
+    public Comment create(Arguments.CreateCommentArgs args) {
         LOGGER.info("CommentDao::create(CommentArgs args)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri, args);
         return httpRequestHelper.makeRequest(request, okPredicate, ImmutableComment.class);

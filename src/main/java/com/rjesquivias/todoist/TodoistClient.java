@@ -1,6 +1,5 @@
 package com.rjesquivias.todoist;
 
-import com.rjesquivias.todoist.domain.*;
 import lombok.Builder;
 
 import java.net.http.HttpClient;
@@ -15,8 +14,8 @@ public class TodoistClient {
     private final ISectionDao sectionDao;
     private final ITaskDao taskDao;
 
-    public static TodoistClient buildClient(String baseUrl, String apiToken) {
-        HttpRequestHelper requestHelper = new HttpRequestHelper(HttpClient.newBuilder().build());
+    private static TodoistClient buildClient(String baseUrl, String apiToken) {
+        HttpRequestHelper requestHelper = HttpRequestHelper.build(HttpClient.newBuilder().build());
 
         return TodoistClient.builder()
                 .projectDao(new ProjectDao(requestHelper, baseUrl + "/rest/v1/projects/", apiToken))
@@ -40,119 +39,111 @@ public class TodoistClient {
         this.taskDao = taskDao;
     }
 
-    public Collection<Project> getProjects() {
-        return this.projectDao.getAll();
+    public Collection<Project> getProjects() { return projectDao.getAll(); }
+
+    public Project getProject(long id) { return projectDao.get(id); }
+
+    public Project createProject(Arguments.CreateProjectArgs args) {
+        return projectDao.create(args);
     }
 
-    public Project getProject(long id) {
-        return this.projectDao.get(id);
-    }
-
-    public Project createProject(IProjectDao.CreateArgs args) {
-        return this.projectDao.create(args);
-    }
-
-    public void updateProject(long id, IProjectDao.UpdateArgs args) {
-        this.projectDao.update(id, args);
+    public void updateProject(long id, Arguments.UpdateProjectArgs args) {
+        projectDao.update(id, args);
     }
 
     public void deleteProject(long id) {
-        this.projectDao.delete(id);
+        projectDao.delete(id);
     }
 
     public Collection<Section> getSections() {
-        return this.sectionDao.getAll();
+        return sectionDao.getAll();
     }
 
     public Collection<Section> getSectionsOfProject(long project_id) {
-        return this.sectionDao.getAll(project_id);
+        return sectionDao.getAll(project_id);
     }
 
-    public Section createSection(ISectionDao.CreateArgs args) {
-        return this.sectionDao.create(args);
+    public Section createSection(Arguments.CreateSectionArgs args) {
+        return sectionDao.create(args);
     }
 
     public Section getSection(long id) {
-        return this.sectionDao.get(id);
+        return sectionDao.get(id);
     }
 
     public void updateSection(long id, String name) {
-        this.sectionDao.update(id, name);
+        sectionDao.update(id, name);
     }
 
     public void deleteSection(long id) {
-        this.sectionDao.delete(id);
+        sectionDao.delete(id);
     }
 
-    public Collection<Task> getTasks(ITaskDao.GetAllActiveArgs args) {
-        return this.taskDao.getAllActive(args);
+    public Collection<Task> getTasks(Arguments.GetAllActiveTasksArgs args) {
+        return taskDao.getAllActive(args);
     }
 
-    public Task createTask(ITaskDao.CreateArgs args) {
-        return this.taskDao.create(args);
+    public Task createTask(Arguments.CreateTaskArgs args) {
+        return taskDao.create(args);
     }
 
     public Task getTask(long id) {
-        return this.taskDao.getActive(id);
+        return taskDao.getActive(id);
     }
 
-    public void updateTask(long id, ITaskDao.UpdateArgs args) {
-        this.taskDao.update(id, args);
+    public void updateTask(long id, Arguments.UpdateTaskArgs args) {
+        taskDao.update(id, args);
     }
 
     public void closeTask(long id) {
-        this.taskDao.close(id);
+        taskDao.close(id);
     }
 
     public void reOpenTask(long id) {
-        this.taskDao.reOpen(id);
+        taskDao.reOpen(id);
     }
 
     public void deleteTask(long id) {
-        this.taskDao.delete(id);
+        taskDao.delete(id);
     }
 
-    public Collection<Comment> getCommentsOfProject(long projectId) {
-        return this.commentDao.getAllInProject(projectId);
-    }
+    public Collection<Comment> getCommentsOfProject(long projectId) { return commentDao.getAllInProject(projectId);}
 
     public Collection<Comment> getCommentsOfTask(long taskId) {
-        return this.commentDao.getAllInTask(taskId);
+        return commentDao.getAllInTask(taskId);
     }
 
-    public Comment createComment(ICommentDao.CreateArgs args) {
-        return this.commentDao.create(args);
+    public Comment createComment(Arguments.CreateCommentArgs args) {
+        return commentDao.create(args);
     }
 
     public Comment getComment(long id) {
-        return this.commentDao.get(id);
+        return commentDao.get(id);
     }
 
     public void updateComment(long id, String content) {
-        this.commentDao.update(id, content);
+        commentDao.update(id, content);
     }
 
     public void deleteComment(long id) {
-        this.commentDao.delete(id);
+        commentDao.delete(id);
     }
 
     public Collection<Label> getLabels() {
-        return this.labelDao.getAll();
+        return labelDao.getAll();
     }
 
-    public Label createLabel(ILabelDao.CreateArgs args) {
-        return this.labelDao.create(args);
+    public Label createLabel(Arguments.CreateLabelArgs args) {
+        return labelDao.create(args);
     }
 
-    public Label getLabel(long id) {
-        return this.labelDao.get(id);
-    }
+    public Label getLabel(long id) { return labelDao.get(id);}
 
-    public void updateLabel(long id, ILabelDao.UpdateArgs args) {
-        this.labelDao.update(id, args);
+    public void updateLabel(long id, Arguments.UpdateLabelArgs args) {
+        labelDao.update(id, args);
     }
 
     public void deleteLabel(long id) {
-        this.labelDao.delete(id);
+        labelDao.delete(id);
     }
 }

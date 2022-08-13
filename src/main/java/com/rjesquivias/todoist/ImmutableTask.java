@@ -1,4 +1,4 @@
-package com.rjesquivias.todoist.domain;
+package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import java.util.Collection;
 
 @JsonDeserialize(builder = ImmutableTask.Builder.class)
-public final class ImmutableTask implements Task {
+final class ImmutableTask implements Task {
 
     private final long id;
 

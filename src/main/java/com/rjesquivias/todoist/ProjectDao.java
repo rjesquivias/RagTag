@@ -1,11 +1,7 @@
 package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rjesquivias.todoist.domain.ImmutableProject;
-import com.rjesquivias.todoist.domain.Project;
-import org.apache.http.HttpStatus;
 
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.util.Collection;
 import java.util.logging.Logger;
@@ -42,14 +38,14 @@ final class ProjectDao implements IProjectDao {
     }
 
     @Override
-    public Project create(CreateArgs args) {
+    public Project create(Arguments.CreateProjectArgs args) {
         LOGGER.info("ProjectDao::create(CreateArgs args)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri, args);
         return httpRequestHelper.makeRequest(request, okPredicate, ImmutableProject.class);
     }
 
     @Override
-    public void update(long id, UpdateArgs args) {
+    public void update(long id, Arguments.UpdateProjectArgs args) {
         LOGGER.info("ProjectDao::update(UpdateArgs args)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri + id, args);
         httpRequestHelper.makeRequest(request, noContentPredicate, ImmutableProject.class);

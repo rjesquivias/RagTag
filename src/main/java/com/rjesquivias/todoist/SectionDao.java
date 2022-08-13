@@ -1,8 +1,6 @@
 package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rjesquivias.todoist.domain.ImmutableSection;
-import com.rjesquivias.todoist.domain.Section;
 
 import java.net.http.HttpRequest;
 import java.util.Collection;
@@ -41,7 +39,7 @@ final class SectionDao implements ISectionDao {
     }
 
     @Override
-    public Section create(CreateArgs args) {
+    public Section create(Arguments.CreateSectionArgs args) {
         LOGGER.info("SectionDao::create(CreateArgs args)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri, args);
         return httpRequestHelper.makeRequest(request, okPredicate, ImmutableSection.class);

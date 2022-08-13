@@ -6,13 +6,13 @@ import static org.mockito.Mockito.verify;
 
 import java.net.http.HttpRequest;
 
-import com.rjesquivias.todoist.domain.ImmutableComment;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import static  com.rjesquivias.todoist.TestConstants.*;
 
+@SuppressWarnings("rawtypes")
 public class CommentDaoTest {
 
   @Test

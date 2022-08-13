@@ -6,8 +6,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.rjesquivias.todoist.ITaskDao.GetAllActiveArgs;
-import com.rjesquivias.todoist.domain.Task;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.net.http.HttpClient;
 import java.util.Collection;
@@ -19,7 +17,7 @@ public class TaskDaoIntegrationTest {
 
   private static final Dotenv dotenv = Dotenv.load();
   private static final ITaskDao taskDao = new TaskDao(
-          new HttpRequestHelper(HttpClient.newBuilder().build()),
+          HttpRequestHelper.build(HttpClient.newBuilder().build()),
           dotenv.get("TASK_URI"),
           dotenv.get("TODOIST_API_TOKEN"));
 
@@ -34,10 +32,10 @@ public class TaskDaoIntegrationTest {
   @Test
   public void whenGetAllActive_returnsAllTasks() {
     for (String content : taskContent) {
-      taskDao.create(ITaskDao.CreateArgs.builder().content(content).build());
+      taskDao.create(Arguments.CreateTaskArgs.builder().content(content).build());
     }
 
-    Collection<Task> tasks = taskDao.getAllActive(GetAllActiveArgs.builder().build());
+    Collection<Task> tasks = taskDao.getAllActive(Arguments.GetAllActiveTasksArgs.builder().build());
 
     for (String content : taskContent) {
       Task foundTask = tasks.stream().filter(task -> task.content().equals(content))
@@ -49,7 +47,7 @@ public class TaskDaoIntegrationTest {
 
   @Test
   public void whenCreate_taskIsCreated() {
-    Task task = taskDao.create(ITaskDao.CreateArgs.builder().content(taskOne).build());
+    Task task = taskDao.create(Arguments.CreateTaskArgs.builder().content(taskOne).build());
     Task queriedTask = taskDao.getActive(task.id());
 
     assertEquals(task, queriedTask);
@@ -59,7 +57,7 @@ public class TaskDaoIntegrationTest {
 
   @Test
   public void whenGetActive_correctTaskIsReturned() {
-    Task task = taskDao.create(ITaskDao.CreateArgs.builder().content(taskOne).build());
+    Task task = taskDao.create(Arguments.CreateTaskArgs.builder().content(taskOne).build());
     Task queriedTask = taskDao.getActive(task.id());
 
     assertEquals(task, queriedTask);
@@ -69,8 +67,8 @@ public class TaskDaoIntegrationTest {
 
   @Test
   public void whenUpdate_taskIsUpdated() {
-    Task task = taskDao.create(ITaskDao.CreateArgs.builder().content(taskOne).build());
-    taskDao.update(task.id(), ITaskDao.UpdateArgs.builder().content(taskTwo).build());
+    Task task = taskDao.create(Arguments.CreateTaskArgs.builder().content(taskOne).build());
+    taskDao.update(task.id(), Arguments.UpdateTaskArgs.builder().content(taskTwo).build());
     Task queriedTask = taskDao.getActive(task.id());
 
     assertNotEquals(task.content(), queriedTask.content());
@@ -81,7 +79,7 @@ public class TaskDaoIntegrationTest {
 
   @Test
   public void whenClose_taskIsDeleted() {
-    Task task = taskDao.create(ITaskDao.CreateArgs.builder().content(taskOne).build());
+    Task task = taskDao.create(Arguments.CreateTaskArgs.builder().content(taskOne).build());
     assertFalse(task.completed());
 
     taskDao.close(task.id());
@@ -94,7 +92,7 @@ public class TaskDaoIntegrationTest {
 
   @Test
   public void whenReopen_taskIsDeleted() {
-    Task task = taskDao.create(ITaskDao.CreateArgs.builder().content(taskOne).build());
+    Task task = taskDao.create(Arguments.CreateTaskArgs.builder().content(taskOne).build());
     assertFalse(task.completed());
 
     taskDao.close(task.id());
@@ -112,7 +110,7 @@ public class TaskDaoIntegrationTest {
 
   @Test
   public void whenDelete_taskIsDeleted() {
-    Task task = taskDao.create(ITaskDao.CreateArgs.builder().content(taskOne).build());
+    Task task = taskDao.create(Arguments.CreateTaskArgs.builder().content(taskOne).build());
     taskDao.delete(task.id());
   }
 }

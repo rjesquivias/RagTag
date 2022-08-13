@@ -3,7 +3,6 @@ package com.rjesquivias.todoist;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.rjesquivias.todoist.*;
 import static com.rjesquivias.todoist.TestConstants.*;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -11,11 +10,11 @@ import org.mockito.Mockito;
 public class TodoistClientTest {
 
   private final TodoistClient client = buildMockClient();
-  private static IProjectDao mockedProjectDao = Mockito.mock(IProjectDao.class);
-  private static ISectionDao mockedSectionDao = Mockito.mock(ISectionDao.class);
-  private static ITaskDao mockedTaskDao = Mockito.mock(ITaskDao.class);
-  private static ICommentDao mockedCommentDao = Mockito.mock(ICommentDao.class);
-  private static ILabelDao mockedLabelDao = Mockito.mock(ILabelDao.class);
+  private static final IProjectDao mockedProjectDao = Mockito.mock(IProjectDao.class);
+  private static final ISectionDao mockedSectionDao = Mockito.mock(ISectionDao.class);
+  private static final ITaskDao mockedTaskDao = Mockito.mock(ITaskDao.class);
+  private static final ICommentDao mockedCommentDao = Mockito.mock(ICommentDao.class);
+  private static final ILabelDao mockedLabelDao = Mockito.mock(ILabelDao.class);
 
   @Test
   public void getProjects() {

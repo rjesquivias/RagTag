@@ -1,8 +1,6 @@
 package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rjesquivias.todoist.domain.ImmutableLabel;
-import com.rjesquivias.todoist.domain.Label;
 
 import java.net.http.HttpRequest;
 import java.util.Collection;
@@ -33,7 +31,7 @@ final class LabelDao implements ILabelDao {
     }
 
     @Override
-    public Label create(CreateArgs args) {
+    public Label create(Arguments.CreateLabelArgs args) {
         LOGGER.info("LabelDao::create(CreateArgs args)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri, args);
         return httpRequestHelper.makeRequest(request, okPredicate, ImmutableLabel.class);
@@ -47,7 +45,7 @@ final class LabelDao implements ILabelDao {
     }
 
     @Override
-    public void update(long id, UpdateArgs args) {
+    public void update(long id, Arguments.UpdateLabelArgs args) {
         LOGGER.info("LabelDao::update(long id, UpdateArgs args)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri + id, args);
         httpRequestHelper.makeRequest(request, noContentPredicate, ImmutableLabel.class);

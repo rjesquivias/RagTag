@@ -4,10 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.rjesquivias.todoist.domain.Comment;
-import com.rjesquivias.todoist.domain.Project;
-import com.rjesquivias.todoist.domain.Task;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.net.http.HttpClient;
 import java.util.Collection;
@@ -18,15 +14,15 @@ import org.junit.Test;
 public class CommentDaoIntegrationTest {
   private static final Dotenv dotenv = Dotenv.load();
   private static final IProjectDao projectDao = new ProjectDao(
-          new HttpRequestHelper(HttpClient.newBuilder().build()),
+          HttpRequestHelper.build(HttpClient.newBuilder().build()),
           dotenv.get("PROJECT_URI"),
           dotenv.get("TODOIST_API_TOKEN"));
   private static final ITaskDao taskDao = new TaskDao(
-          new HttpRequestHelper(HttpClient.newBuilder().build()),
+          HttpRequestHelper.build(HttpClient.newBuilder().build()),
           dotenv.get("TASK_URI"),
           dotenv.get("TODOIST_API_TOKEN"));
   private static final ICommentDao commentDao = new CommentDao(
-          new HttpRequestHelper(HttpClient.newBuilder().build()),
+          HttpRequestHelper.build(HttpClient.newBuilder().build()),
           dotenv.get("COMMENT_URI"),
           dotenv.get("TODOIST_API_TOKEN"));
   private static final String testprojectName = "INT_TEST_PROJECT_NAME_1";
@@ -40,11 +36,11 @@ public class CommentDaoIntegrationTest {
   @Test
   public void whenGetAllInProject_returnsAllComments() {
     Project project = projectDao.create(
-        IProjectDao.CreateArgs.builder().name(testprojectName).build());
+        Arguments.CreateProjectArgs.builder().name(testprojectName).build());
 
     for (String content : testContent) {
       commentDao.create(
-          ICommentDao.CreateArgs.builder().project_id(project.id()).content(content).build());
+          Arguments.CreateCommentArgs.builder().project_id(project.id()).content(content).build());
     }
 
     Collection<Comment> comments = commentDao.getAllInProject(project.id());
@@ -63,11 +59,11 @@ public class CommentDaoIntegrationTest {
 
   @Test
   public void whenGetAllInTask_returnsAllComments() {
-    Task task = taskDao.create(ITaskDao.CreateArgs.builder().content(testContentOne).build());
+    Task task = taskDao.create(Arguments.CreateTaskArgs.builder().content(testContentOne).build());
 
     for (String content : testContent) {
       commentDao.create(
-          ICommentDao.CreateArgs.builder().task_id(task.id()).content(content).build());
+          Arguments.CreateCommentArgs.builder().task_id(task.id()).content(content).build());
     }
 
     Collection<Comment> comments = commentDao.getAllInTask(task.id());
@@ -85,10 +81,10 @@ public class CommentDaoIntegrationTest {
   }
 
   @Test
-  public void whenCreate_returnsCreatedComment() throws JsonProcessingException {
-    Task task = taskDao.create(ITaskDao.CreateArgs.builder().content(testContentOne).build());
+  public void whenCreate_returnsCreatedComment() {
+    Task task = taskDao.create(Arguments.CreateTaskArgs.builder().content(testContentOne).build());
     Comment comment = commentDao.create(
-        ICommentDao.CreateArgs.builder().task_id(task.id()).content(testCommentContentOne).build());
+        Arguments.CreateCommentArgs.builder().task_id(task.id()).content(testCommentContentOne).build());
 
     Comment queriedComment = commentDao.get(comment.id());
 
@@ -100,9 +96,9 @@ public class CommentDaoIntegrationTest {
 
   @Test
   public void whenGet_returnsComment() {
-    Task task = taskDao.create(ITaskDao.CreateArgs.builder().content(testContentOne).build());
+    Task task = taskDao.create(Arguments.CreateTaskArgs.builder().content(testContentOne).build());
     Comment comment = commentDao.create(
-        ICommentDao.CreateArgs.builder().task_id(task.id()).content(testCommentContentOne).build());
+        Arguments.CreateCommentArgs.builder().task_id(task.id()).content(testCommentContentOne).build());
 
     Comment queriedComment = commentDao.get(comment.id());
 
@@ -114,9 +110,9 @@ public class CommentDaoIntegrationTest {
 
   @Test
   public void whenUpdate_returnsUpdatedComment() {
-    Task task = taskDao.create(ITaskDao.CreateArgs.builder().content(testContentOne).build());
+    Task task = taskDao.create(Arguments.CreateTaskArgs.builder().content(testContentOne).build());
     Comment comment = commentDao.create(
-        ICommentDao.CreateArgs.builder().task_id(task.id()).content(testCommentContentOne).build());
+        Arguments.CreateCommentArgs.builder().task_id(task.id()).content(testCommentContentOne).build());
 
     Comment queriedComment = commentDao.get(comment.id());
     assertEquals(comment, queriedComment);
@@ -133,9 +129,9 @@ public class CommentDaoIntegrationTest {
 
   @Test
   public void whenDelete_commentIsDeleted() {
-    Task task = taskDao.create(ITaskDao.CreateArgs.builder().content(testContentOne).build());
+    Task task = taskDao.create(Arguments.CreateTaskArgs.builder().content(testContentOne).build());
     Comment comment = commentDao.create(
-        ICommentDao.CreateArgs.builder().task_id(task.id()).content(testCommentContentOne).build());
+        Arguments.CreateCommentArgs.builder().task_id(task.id()).content(testCommentContentOne).build());
     commentDao.delete(comment.id());
     taskDao.delete(task.id());
   }

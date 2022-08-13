@@ -1,8 +1,5 @@
 package com.rjesquivias.todoist;
 
-import com.rjesquivias.todoist.domain.Color;
-import com.rjesquivias.todoist.domain.ImmutableProject;
-import com.rjesquivias.todoist.domain.Project;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -15,6 +12,7 @@ import static com.rjesquivias.todoist.TestConstants.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
+@SuppressWarnings("rawtypes")
 public class ProjectDaoTest {
 
   @Test
@@ -126,11 +124,5 @@ public class ProjectDaoTest {
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(noContentPredicate, responsePredicateArgumentCaptor.getValue());
     assertEquals(ImmutableProject.class, classArgumentCaptor.getValue());
-  }
-
-  static Project buildTestProject() {
-    return Project.builder().id(1).name("name").color(Color.BLUE).parentId(1).order(1)
-        .commentCount(1).shared(true).favorite(true).inboxProject(true).teamInbox(true)
-        .syncId(1).url("url").build();
   }
 }

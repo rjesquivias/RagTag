@@ -25,7 +25,7 @@ interface IProjectDao {
 
         private String name;
         private long parent_id;
-        private long color;
+        private Color color;
         private boolean favorite;
     }
 

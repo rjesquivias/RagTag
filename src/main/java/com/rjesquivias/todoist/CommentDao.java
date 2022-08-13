@@ -2,6 +2,7 @@ package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rjesquivias.todoist.domain.Comment;
+import com.rjesquivias.todoist.domain.ImmutableComment;
 
 import java.net.http.HttpRequest;
 import java.util.Collection;
@@ -29,7 +30,7 @@ final class CommentDao implements ICommentDao {
         LOGGER.info("CommentDao::getAllInProject(long projectId)");
         HttpRequest request = httpRequestFactory.buildGet(
                 String.format("%s?project_id=%d", baseUri, projectId));
-        return httpRequestHelper.makeCollectionRequest(request, okPredicate, Comment.class);
+        return httpRequestHelper.makeCollectionRequest(request, okPredicate, ImmutableComment.class);
     }
 
     @Override
@@ -37,14 +38,14 @@ final class CommentDao implements ICommentDao {
         LOGGER.info("CommentDao::getAllInTask(long taskId)");
         HttpRequest request = httpRequestFactory.buildGet(
                 String.format("%s?task_id=%d", baseUri, taskId));
-        return httpRequestHelper.makeCollectionRequest(request, okPredicate, Comment.class);
+        return httpRequestHelper.makeCollectionRequest(request, okPredicate, ImmutableComment.class);
     }
 
     @Override
     public Comment create(CreateArgs args) {
         LOGGER.info("CommentDao::create(CommentArgs args)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri, args);
-        return httpRequestHelper.makeRequest(request, okPredicate, Comment.class);
+        return httpRequestHelper.makeRequest(request, okPredicate, ImmutableComment.class);
     }
 
     @Override
@@ -52,7 +53,7 @@ final class CommentDao implements ICommentDao {
 
         LOGGER.info("CommentDao::get(long commentId)");
         HttpRequest request = httpRequestFactory.buildGet(baseUri + commentId);
-        return httpRequestHelper.makeRequest(request, okPredicate, Comment.class);
+        return httpRequestHelper.makeRequest(request, okPredicate, ImmutableComment.class);
     }
 
     @Override
@@ -60,13 +61,13 @@ final class CommentDao implements ICommentDao {
         LOGGER.info("CommentDao::update(long commentId, String content)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri + commentId,
                 String.format("{\"content\": \"%s\"}", content));
-        httpRequestHelper.makeRequest(request, noContentPredicate, Comment.class);
+        httpRequestHelper.makeRequest(request, noContentPredicate, ImmutableComment.class);
     }
 
     @Override
     public void delete(long commentId) {
         LOGGER.info("CommentDao::delete(long commentId)");
         HttpRequest request = httpRequestFactory.buildDelete(baseUri + commentId);
-        httpRequestHelper.makeRequest(request, noContentPredicate, Comment.class);
+        httpRequestHelper.makeRequest(request, noContentPredicate, ImmutableComment.class);
     }
 }

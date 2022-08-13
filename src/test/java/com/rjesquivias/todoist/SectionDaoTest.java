@@ -4,7 +4,7 @@ import static com.rjesquivias.todoist.Predicates.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
-import com.rjesquivias.todoist.domain.Section;
+import com.rjesquivias.todoist.domain.ImmutableSection;
 
 import java.net.http.HttpRequest;
 import org.junit.Test;
@@ -32,7 +32,7 @@ public class SectionDaoTest {
     HttpRequest expectedHttpRequest = httpRequestFactory.buildGet(validUriString);
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Section.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableSection.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -54,7 +54,7 @@ public class SectionDaoTest {
         String.format("%s?project_id=%d", validUriString, testProjectId));
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Section.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableSection.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -77,7 +77,7 @@ public class SectionDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Section.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableSection.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -99,7 +99,7 @@ public class SectionDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Section.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableSection.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -122,7 +122,7 @@ public class SectionDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(noContentPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Section.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableSection.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -145,6 +145,6 @@ public class SectionDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(noContentPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Section.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableSection.class, classArgumentCaptor.getValue());
   }
 }

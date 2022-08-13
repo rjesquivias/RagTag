@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
 import com.rjesquivias.todoist.ITaskDao.UpdateArgs;
-import com.rjesquivias.todoist.domain.Task;
+import com.rjesquivias.todoist.domain.ImmutableTask;
 
 import java.net.http.HttpRequest;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class TaskDaoTest {
     HttpRequest expectedHttpRequest = httpRequestFactory.buildGet(validUriString);
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Task.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableTask.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -54,7 +54,7 @@ public class TaskDaoTest {
     HttpRequest expectedHttpRequest = httpRequestFactory.buildPost(validUriString, createTaskArgs);
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Task.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableTask.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -76,7 +76,7 @@ public class TaskDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(okPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Task.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableTask.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -98,7 +98,7 @@ public class TaskDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(noContentPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Task.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableTask.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -121,7 +121,7 @@ public class TaskDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(noContentPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Task.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableTask.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -144,7 +144,7 @@ public class TaskDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(noContentPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Task.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableTask.class, classArgumentCaptor.getValue());
   }
 
   @Test
@@ -167,6 +167,6 @@ public class TaskDaoTest {
 
     assertEquals(expectedHttpRequest, requestArgumentCaptor.getValue());
     assertEquals(noContentPredicate, responsePredicateArgumentCaptor.getValue());
-    assertEquals(Task.class, classArgumentCaptor.getValue());
+    assertEquals(ImmutableTask.class, classArgumentCaptor.getValue());
   }
 }

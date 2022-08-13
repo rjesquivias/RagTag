@@ -58,32 +58,4 @@ public sealed interface Task permits ImmutableTask {
         Builder() {
         }
     }
-
-    @Value.Immutable
-    @Value.Style(
-            builderVisibility = Value.Style.BuilderVisibility.PACKAGE,
-            visibility = Value.Style.ImplementationVisibility.PACKAGE,
-            overshadowImplementation = true
-    )
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    sealed interface Due permits ImmutableDue {
-        String string();
-
-        String date();
-
-        boolean recurring();
-
-        String datetime();
-
-        String timezone();
-
-        static Due.Builder builder() {
-            return new Due.Builder();
-        }
-
-        final class Builder extends ImmutableDue.Builder {
-            Builder() {
-            }
-        }
-    }
 }

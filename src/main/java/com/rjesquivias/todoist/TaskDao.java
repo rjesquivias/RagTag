@@ -1,6 +1,7 @@
 package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rjesquivias.todoist.domain.ImmutableTask;
 import com.rjesquivias.todoist.domain.Task;
 
 import java.net.http.HttpRequest;
@@ -28,48 +29,48 @@ final class TaskDao implements ITaskDao {
     public Collection<Task> getAllActive(GetAllActiveArgs args) {
         LOGGER.info("TaskDao::getAllActive()");
         HttpRequest request = httpRequestFactory.buildGet(baseUri);
-        return httpRequestHelper.makeCollectionRequest(request, okPredicate, Task.class);
+        return httpRequestHelper.makeCollectionRequest(request, okPredicate, ImmutableTask.class);
     }
 
     @Override
     public Task create(CreateArgs args) {
         LOGGER.info("TaskDao::create(CreateArgs args)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri, args);
-        return httpRequestHelper.makeRequest(request, okPredicate, Task.class);
+        return httpRequestHelper.makeRequest(request, okPredicate, ImmutableTask.class);
     }
 
     @Override
     public Task getActive(long id) {
         LOGGER.info("TaskDao::get(long id)");
         HttpRequest request = httpRequestFactory.buildGet(baseUri + id);
-        return httpRequestHelper.makeRequest(request, okPredicate, Task.class);
+        return httpRequestHelper.makeRequest(request, okPredicate, ImmutableTask.class);
     }
 
     @Override
     public void update(long id, UpdateArgs args) {
         LOGGER.info("TaskDao::update(UpdateArgs args)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri + id, args);
-        httpRequestHelper.makeRequest(request, noContentPredicate, Task.class);
+        httpRequestHelper.makeRequest(request, noContentPredicate, ImmutableTask.class);
     }
 
     @Override
     public void close(long id) {
         LOGGER.info("TaskDao::close(long id)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri + id + "/close", "");
-        httpRequestHelper.makeRequest(request, noContentPredicate, Task.class);
+        httpRequestHelper.makeRequest(request, noContentPredicate, ImmutableTask.class);
     }
 
     @Override
     public void reOpen(long id) {
         LOGGER.info("TaskDao::reOpen(long id)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri + id + "/reopen", "");
-        httpRequestHelper.makeRequest(request, noContentPredicate, Task.class);
+        httpRequestHelper.makeRequest(request, noContentPredicate, ImmutableTask.class);
     }
 
     @Override
     public void delete(long id) {
         LOGGER.info("TaskDao::delete(long id)");
         HttpRequest request = httpRequestFactory.buildDelete(baseUri + id);
-        httpRequestHelper.makeRequest(request, noContentPredicate, Task.class);
+        httpRequestHelper.makeRequest(request, noContentPredicate, ImmutableTask.class);
     }
 }

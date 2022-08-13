@@ -1,6 +1,7 @@
 package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rjesquivias.todoist.domain.ImmutableSection;
 import com.rjesquivias.todoist.domain.Section;
 
 import java.net.http.HttpRequest;
@@ -28,7 +29,7 @@ final class SectionDao implements ISectionDao {
     public Collection<Section> getAll() {
         LOGGER.info("SectionDao::getAll()");
         HttpRequest request = httpRequestFactory.buildGet(baseUri);
-        return httpRequestHelper.makeCollectionRequest(request, okPredicate, Section.class);
+        return httpRequestHelper.makeCollectionRequest(request, okPredicate, ImmutableSection.class);
     }
 
     @Override
@@ -36,21 +37,21 @@ final class SectionDao implements ISectionDao {
         LOGGER.info("SectionDao::getAll(long project_id)");
         HttpRequest request = httpRequestFactory.buildGet(
                 String.format("%s?project_id=%d", baseUri, project_id));
-        return httpRequestHelper.makeCollectionRequest(request, okPredicate, Section.class);
+        return httpRequestHelper.makeCollectionRequest(request, okPredicate, ImmutableSection.class);
     }
 
     @Override
     public Section create(CreateArgs args) {
         LOGGER.info("SectionDao::create(CreateArgs args)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri, args);
-        return httpRequestHelper.makeRequest(request, okPredicate, Section.class);
+        return httpRequestHelper.makeRequest(request, okPredicate, ImmutableSection.class);
     }
 
     @Override
     public Section get(long id) {
         LOGGER.info("SectionDao::get(long id)");
         HttpRequest request = httpRequestFactory.buildGet(baseUri + id);
-        return httpRequestHelper.makeRequest(request, okPredicate, Section.class);
+        return httpRequestHelper.makeRequest(request, okPredicate, ImmutableSection.class);
     }
 
     @Override
@@ -58,13 +59,13 @@ final class SectionDao implements ISectionDao {
         LOGGER.info("SectionDao::update(long id, String name)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri + id,
                 String.format("{\"name\": \"%s\"}", name));
-        httpRequestHelper.makeRequest(request, noContentPredicate, Section.class);
+        httpRequestHelper.makeRequest(request, noContentPredicate, ImmutableSection.class);
     }
 
     @Override
     public void delete(long id) {
         LOGGER.info("SectionDao::delete(long id)");
         HttpRequest request = httpRequestFactory.buildDelete(baseUri + id);
-        httpRequestHelper.makeRequest(request, noContentPredicate, Section.class);
+        httpRequestHelper.makeRequest(request, noContentPredicate, ImmutableSection.class);
     }
 }

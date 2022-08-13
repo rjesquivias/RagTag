@@ -1,9 +1,8 @@
-package com.rjesquivias.todoist.domain;
+package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.immutables.value.Value;
-
 
 @Value.Immutable
 @Value.Style(
@@ -12,22 +11,26 @@ import org.immutables.value.Value;
         overshadowImplementation = true
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
-public sealed interface Section permits ImmutableSection {
+public sealed interface Comment permits ImmutableComment {
     long id();
+
+    @JsonProperty("task_id")
+    long taskId();
 
     @JsonProperty("project_id")
     long projectId();
 
-    long order();
+    String posted();
 
-    String name();
+    String content();
 
     static Builder builder() {
         return new Builder();
     }
 
-    final class Builder extends ImmutableSection.Builder {
+    final class Builder extends ImmutableComment.Builder {
         Builder() {
         }
     }
 }
+

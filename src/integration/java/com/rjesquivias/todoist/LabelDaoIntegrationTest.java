@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
-import com.rjesquivias.todoist.domain.Label;
 import io.github.cdimascio.dotenv.Dotenv;
 import java.net.http.HttpClient;
 import java.util.Collection;
@@ -15,7 +14,7 @@ import org.junit.Test;
 public class LabelDaoIntegrationTest {
   private static final Dotenv dotenv = Dotenv.load();
   private static final ILabelDao labelDao = new LabelDao(
-      new HttpRequestHelper(HttpClient.newBuilder().build()),
+      HttpRequestHelper.build(HttpClient.newBuilder().build()),
       dotenv.get("LABEL_URI"),
       dotenv.get("TODOIST_API_TOKEN")
       );
@@ -28,7 +27,7 @@ public class LabelDaoIntegrationTest {
   public void whenGetAll_returnsAllLabels() {
     for (String labelName : labelNames) {
       labelDao.create(
-          ILabelDao.CreateArgs.builder().name(labelName).build());
+          Arguments.CreateLabelArgs.builder().name(labelName).build());
     }
 
     Collection<Label> labels = labelDao.getAll();
@@ -37,7 +36,7 @@ public class LabelDaoIntegrationTest {
       Label foundLabel = labels.stream()
           .filter(label -> label.name().equals(labelName))
           .findFirst().orElse(null);
-      assertNotNull(labelName);
+      assertNotNull(foundLabel);
 
       labelDao.delete(foundLabel.id());
     }
@@ -45,7 +44,7 @@ public class LabelDaoIntegrationTest {
 
   @Test
   public void whenCreate_returnsCreatedLabel() {
-    Label label = labelDao.create(ILabelDao.CreateArgs.builder().name(labelNameOne).build());
+    Label label = labelDao.create(Arguments.CreateLabelArgs.builder().name(labelNameOne).build());
 
     Label queriedLabel = labelDao.get(label.id());
 
@@ -56,7 +55,7 @@ public class LabelDaoIntegrationTest {
 
   @Test
   public void whenGet_returnsLabel() {
-    Label label = labelDao.create(ILabelDao.CreateArgs.builder().name(labelNameOne).build());
+    Label label = labelDao.create(Arguments.CreateLabelArgs.builder().name(labelNameOne).build());
 
     Label queriedLabel = labelDao.get(label.id());
 
@@ -67,12 +66,12 @@ public class LabelDaoIntegrationTest {
 
   @Test
   public void whenUpdate_returnsUpdatedLabel() {
-    Label label = labelDao.create(ILabelDao.CreateArgs.builder().name(labelNameOne).build());
+    Label label = labelDao.create(Arguments.CreateLabelArgs.builder().name(labelNameOne).build());
 
     Label queriedLabel = labelDao.get(label.id());
     assertEquals(label, queriedLabel);
 
-    labelDao.update(label.id(), ILabelDao.UpdateArgs.builder().name(labelNameTwo).build());
+    labelDao.update(label.id(), Arguments.UpdateLabelArgs.builder().name(labelNameTwo).build());
     queriedLabel = labelDao.get(label.id());
 
     assertNotEquals(label.name(), queriedLabel.name());
@@ -83,7 +82,7 @@ public class LabelDaoIntegrationTest {
 
   @Test
   public void whenDelete_labelIsDeleted() {
-    Label label = labelDao.create(ILabelDao.CreateArgs.builder().name(labelNameOne).build());
+    Label label = labelDao.create(Arguments.CreateLabelArgs.builder().name(labelNameOne).build());
     labelDao.delete(label.id());
   }
 }

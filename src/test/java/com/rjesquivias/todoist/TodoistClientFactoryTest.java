@@ -8,7 +8,7 @@ public class TodoistClientFactoryTest {
 
   @Test
   public void buildClient() {
-    TodoistClient client = TodoistClient.buildClient(validUriString, testToken);
+    TodoistClient client = TodoistClient.buildClient(testToken);
     assertNotNull(client);
   }
 }

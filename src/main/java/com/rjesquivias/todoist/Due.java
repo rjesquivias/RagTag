@@ -1,4 +1,4 @@
-package com.rjesquivias.todoist.domain;
+package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.immutables.value.Value;
@@ -10,7 +10,7 @@ import org.immutables.value.Value;
         overshadowImplementation = true
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
-sealed interface Due permits ImmutableDue {
+public sealed interface Due permits ImmutableDue {
     String string();
 
     String date();

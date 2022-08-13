@@ -1,4 +1,4 @@
-package com.rjesquivias.todoist.domain;
+package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 @JsonDeserialize(builder = ImmutableComment.Builder.class)
-public final class ImmutableComment implements Comment {
+final class ImmutableComment implements Comment {
     private final long id;
 
     private final long taskId;

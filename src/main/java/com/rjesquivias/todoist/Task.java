@@ -1,4 +1,4 @@
-package com.rjesquivias.todoist.domain;
+package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

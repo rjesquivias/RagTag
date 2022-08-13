@@ -1,7 +1,6 @@
 package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rjesquivias.todoist.domain.Color;
 
 import java.util.Collection;
 import java.util.List;
@@ -40,27 +39,27 @@ public final class TestConstants {
           3L, 4L, 5L);
   static final HttpRequestFactory httpRequestFactory = new HttpRequestFactory(testToken,
       new ObjectMapper());
-  static final ISectionDao.CreateArgs createSectionArgs = ISectionDao.CreateArgs.builder().name("test-section-1")
+  static final Arguments.CreateSectionArgs createSectionArgs = Arguments.CreateSectionArgs.builder().name("test-section-1")
       .project_id(testProjectId).build();
-  static final ITaskDao.CreateArgs createTaskArgs = ITaskDao.CreateArgs.builder().content(testContent)
+  static final Arguments.CreateTaskArgs createTaskArgs = Arguments.CreateTaskArgs.builder().content(testContent)
       .description(testDescription).project_id(testProjectId).section_id(testSectionId)
       .parent_id(testParentId).parent(testParent).order(testOrder).label_ids(testLabelIds)
       .priority(testPriority).due_string(testDueString).due_date(testDueDate)
       .due_datetime(testDueDatetime).due_lang(testDueLang).assignee(testAssignee).build();
-  static final ITaskDao.GetAllActiveArgs getAllActiveTaskArgs = ITaskDao.GetAllActiveArgs.builder()
+  static final Arguments.GetAllActiveTasksArgs getAllActiveTaskArgs = Arguments.GetAllActiveTasksArgs.builder()
       .project_id(testProjectId).section_id(testSectionId).label_id(testLabelId).filter(testFilter)
       .lang(testLang).ids(testIds).build();
-  static final ICommentDao.CreateArgs createCommentArgs = ICommentDao.CreateArgs.builder().task_id(testTaskId)
+  static final Arguments.CreateCommentArgs createCommentArgs = Arguments.CreateCommentArgs.builder().task_id(testTaskId)
       .content(testContent).build();
-  static final ILabelDao.CreateArgs createLabelArgs = ILabelDao.CreateArgs.builder().name(testName)
+  static final Arguments.CreateLabelArgs createLabelArgs = Arguments.CreateLabelArgs.builder().name(testName)
       .order(testOrder).color(testColor).favorite(testFavorite).build();
-  static final ILabelDao.UpdateArgs updateLabelArgs = ILabelDao.UpdateArgs.builder().name(testName)
+  static final Arguments.UpdateLabelArgs updateLabelArgs = Arguments.UpdateLabelArgs.builder().name(testName)
       .order(testOrder).color(testColor).favorite(testFavorite).build();
-  static final IProjectDao.CreateArgs createProjectArgs = IProjectDao.CreateArgs.builder().name(testName)
+  static final Arguments.CreateProjectArgs createProjectArgs = Arguments.CreateProjectArgs.builder().name(testName)
       .build();
-  static final IProjectDao.UpdateArgs updateProjectArgs = IProjectDao.UpdateArgs.builder().name(testName)
+  static final Arguments.UpdateProjectArgs updateProjectArgs = Arguments.UpdateProjectArgs.builder().name(testName)
       .build();
-  static final ITaskDao.UpdateArgs updateTaskArgs = ITaskDao.UpdateArgs.builder().content(testContent).build();
+  static final Arguments.UpdateTaskArgs updateTaskArgs = Arguments.UpdateTaskArgs.builder().content(testContent).build();
 
   static final String testUpdatedSectionName = "test-new-section-name";
 

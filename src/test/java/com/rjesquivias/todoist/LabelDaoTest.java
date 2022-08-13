@@ -4,14 +4,13 @@ import static com.rjesquivias.todoist.Predicates.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
-import com.rjesquivias.todoist.domain.ImmutableLabel;
-
 import java.net.http.HttpRequest;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import static com.rjesquivias.todoist.TestConstants.*;
 
+@SuppressWarnings("rawtypes")
 public final class LabelDaoTest {
 
   @Test

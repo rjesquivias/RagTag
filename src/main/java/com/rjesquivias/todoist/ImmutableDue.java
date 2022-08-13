@@ -1,11 +1,11 @@
-package com.rjesquivias.todoist.domain;
+package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 @JsonDeserialize(builder = ImmutableDue.Builder.class)
-public final class ImmutableDue implements Due {
+final class ImmutableDue implements Due {
 
     private final String string;
     private final String date;

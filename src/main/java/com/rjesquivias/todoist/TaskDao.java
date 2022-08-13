@@ -1,8 +1,6 @@
 package com.rjesquivias.todoist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rjesquivias.todoist.domain.ImmutableTask;
-import com.rjesquivias.todoist.domain.Task;
 
 import java.net.http.HttpRequest;
 import java.util.Collection;
@@ -26,14 +24,14 @@ final class TaskDao implements ITaskDao {
     }
 
     @Override
-    public Collection<Task> getAllActive(GetAllActiveArgs args) {
+    public Collection<Task> getAllActive(Arguments.GetAllActiveTasksArgs args) {
         LOGGER.info("TaskDao::getAllActive()");
         HttpRequest request = httpRequestFactory.buildGet(baseUri);
         return httpRequestHelper.makeCollectionRequest(request, okPredicate, ImmutableTask.class);
     }
 
     @Override
-    public Task create(CreateArgs args) {
+    public Task create(Arguments.CreateTaskArgs args) {
         LOGGER.info("TaskDao::create(CreateArgs args)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri, args);
         return httpRequestHelper.makeRequest(request, okPredicate, ImmutableTask.class);
@@ -47,7 +45,7 @@ final class TaskDao implements ITaskDao {
     }
 
     @Override
-    public void update(long id, UpdateArgs args) {
+    public void update(long id, Arguments.UpdateTaskArgs args) {
         LOGGER.info("TaskDao::update(UpdateArgs args)");
         HttpRequest request = httpRequestFactory.buildPost(baseUri + id, args);
         httpRequestHelper.makeRequest(request, noContentPredicate, ImmutableTask.class);

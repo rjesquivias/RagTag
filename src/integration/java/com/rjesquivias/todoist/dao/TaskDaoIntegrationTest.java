@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import com.google.common.collect.ImmutableList;
 import com.rjesquivias.todoist.dao.ITaskDao.GetAllActiveArgs;
 import com.rjesquivias.todoist.domain.Task;
 import com.rjesquivias.todoist.util.http.HttpRequestHelper;
@@ -21,7 +20,7 @@ public class TaskDaoIntegrationTest {
       new HttpRequestHelper(HttpClient.newBuilder().build()),
       Dotenv.load());
 
-  private static final Collection<String> taskContent = ImmutableList.of("INT_TEST_TASK_1",
+  private static final Collection<String> taskContent = List.of("INT_TEST_TASK_1",
       "INT_TEST_TASK_2", "INT_TEST_TASK_3", "INT_TEST_TASK_4");
 
   private static final String taskOne = "INT_TEST_TASK_1";

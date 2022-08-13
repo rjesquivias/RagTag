@@ -1,6 +1,6 @@
-package com.rjesquivias.todoist.util.http;
+package com.rjesquivias.todoist;
 
-import static com.rjesquivias.todoist.util.http.HttpRequestHelperTest.buildTestProject;
+import static com.rjesquivias.todoist.HttpRequestHelperTest.buildTestProject;
 import static java.lang.String.format;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
@@ -8,8 +8,9 @@ import static org.mockito.ArgumentMatchers.any;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import java.net.http.HttpRequest;
+import java.util.List;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -45,7 +46,7 @@ public class HttpRequestFactoryTest {
 
     HttpRequest request = sut.buildPost(validUriString, buildTestProject());
 
-    assertEquals(ImmutableList.of(format("Bearer %s", testToken)),
+    assertEquals(List.of(format("Bearer %s", testToken)),
         request.headers().map().get("Authorization"));
   }
 
@@ -55,7 +56,7 @@ public class HttpRequestFactoryTest {
 
     HttpRequest request = sut.buildPost(validUriString, buildTestProject());
 
-    assertEquals(ImmutableList.of("application/json"),
+    assertEquals(List.of("application/json"),
         request.headers().map().get("Content-Type"));
   }
 
@@ -72,7 +73,7 @@ public class HttpRequestFactoryTest {
 
     HttpRequest request = sut.buildGet(validUriString);
 
-    assertEquals(ImmutableList.of(format("Bearer %s", testToken)),
+    assertEquals(List.of(format("Bearer %s", testToken)),
         request.headers().map().get("Authorization"));
   }
 
@@ -89,7 +90,7 @@ public class HttpRequestFactoryTest {
 
     HttpRequest request = sut.buildDelete(validUriString);
 
-    assertEquals(ImmutableList.of(format("Bearer %s", testToken)),
+    assertEquals(List.of(format("Bearer %s", testToken)),
         request.headers().map().get("Authorization"));
   }
 }

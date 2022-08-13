@@ -1,20 +1,16 @@
-package com.rjesquivias.todoist.client;
+package com.rjesquivias.todoist;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.rjesquivias.todoist.dao.IBaseDaoTest;
-import com.rjesquivias.todoist.dao.ICommentDao;
-import com.rjesquivias.todoist.dao.ILabelDao;
-import com.rjesquivias.todoist.dao.IProjectDao;
-import com.rjesquivias.todoist.dao.ISectionDao;
-import com.rjesquivias.todoist.dao.ITaskDao;
+import com.rjesquivias.todoist.*;
+import static com.rjesquivias.todoist.TestConstants.*;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-public class SynchronousTodoistClientTest implements IBaseDaoTest {
+public class TodoistClientTest {
 
-  private final SynchronousTodoistClient client = buildMockClient();
+  private final TodoistClient client = buildMockClient();
   private static IProjectDao mockedProjectDao = Mockito.mock(IProjectDao.class);
   private static ISectionDao mockedSectionDao = Mockito.mock(ISectionDao.class);
   private static ITaskDao mockedTaskDao = Mockito.mock(ITaskDao.class);
@@ -195,8 +191,8 @@ public class SynchronousTodoistClientTest implements IBaseDaoTest {
     verify(mockedLabelDao, times(1)).delete(testLabelId);
   }
 
-  private static SynchronousTodoistClient buildMockClient() {
-    return SynchronousTodoistClient.builder()
+  private static TodoistClient buildMockClient() {
+    return TodoistClient.builder()
         .projectDao(mockedProjectDao)
         .sectionDao(mockedSectionDao)
         .taskDao(mockedTaskDao)

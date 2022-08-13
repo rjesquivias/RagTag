@@ -1,4 +1,4 @@
-package com.rjesquivias.todoist.util.http;
+package com.rjesquivias.todoist;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -9,15 +9,16 @@ import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
-import com.rjesquivias.todoist.domain.Colors;
+import com.rjesquivias.todoist.domain.Color;
 import com.rjesquivias.todoist.domain.Project;
-import com.rjesquivias.todoist.exceptions.ServiceUnavailableException;
+import com.rjesquivias.todoist.exceptions.ServiceUnavailable;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.Collection;
+import java.util.List;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -67,7 +68,7 @@ public class HttpRequestHelperTest {
     HttpRequest request = httpRequestFactory.buildGet(testUri);
     JavaType type = objectMapper.getTypeFactory().constructType(String.class);
 
-    assertThrows(ServiceUnavailableException.class,
+    assertThrows(ServiceUnavailable.class,
         () -> sut.request(request, (r) -> false, type));
   }
 
@@ -110,7 +111,7 @@ public class HttpRequestHelperTest {
   @Test
   public void whenMakeCollectionRequest_happyPath_succeeds()
       throws IOException, InterruptedException {
-    Collection<Project> testProjects = ImmutableList.of(buildTestProject(), buildTestProject());
+    Collection<Project> testProjects = List.of(buildTestProject(), buildTestProject());
 
     @SuppressWarnings("unchecked")
     HttpResponse<String> mockedResponse = Mockito.mock(HttpResponse.class);
@@ -144,8 +145,8 @@ public class HttpRequestHelperTest {
   }
 
   static Project buildTestProject() {
-    return Project.builder().id(1).name("name").color(Colors.BLUE).parent_id(1).order(1)
-        .comment_count(1).shared(true).favorite(true).inbox_project(true).team_inbox(true)
-        .sync_id(1).url("url").build();
+    return Project.builder().id(1).name("name").color(Color.BLUE).parentId(1).order(1)
+        .commentCount(1).shared(true).favorite(true).inboxProject(true).teamInbox(true)
+        .syncId(1).url("url").build();
   }
 }

@@ -14,6 +14,38 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>http://www.opensource.org/licenses/mit-license.php</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>rjesquivias</id>
+      <name>Raul Joseph Esquivias</name>
+      <email>rauljesquivias@gmail.com</email>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git@github.com:rjesquivias/RagTag.git</connection>
+    <developerConnection>scm:git:ssh://github.com:rjesquivias/RagTag.git</developerConnection>
+    <url>https://github.com/rjesquivias/RagTag/tree/master/</url>
+  </scm>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>3.0.0-M6</version>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
     <dependency>
       <groupId>org.projectlombok</groupId>

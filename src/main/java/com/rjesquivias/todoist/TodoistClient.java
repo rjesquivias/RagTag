@@ -8,6 +8,13 @@ import java.util.Collection;
 @Builder
 public class TodoistClient {
 
+    public static final String REST_V_1_PROJECTS = "/rest/v1/projects/";
+    public static final String REST_V_1_SECTIONS = "/rest/v1/sections/";
+    public static final String REST_V_1_TASKS = "/rest/v1/tasks/";
+    public static final String REST_V_1_COMMENTS = "/rest/v1/comments/";
+    public static final String REST_V_1_LABELS = "/rest/v1/labels/";
+    public static final String URL = "https://api.todoist.com";
+
     private final ICommentDao commentDao;
     private final ILabelDao labelDao;
     private final IProjectDao projectDao;
@@ -18,15 +25,15 @@ public class TodoistClient {
         HttpRequestHelper requestHelper = HttpRequestHelper.build(HttpClient.newBuilder().build());
 
         return TodoistClient.builder()
-                .projectDao(new ProjectDao(requestHelper, baseUrl + "/rest/v1/projects/", apiToken))
-                .sectionDao(new SectionDao(requestHelper, baseUrl + "/rest/v1/sections/", apiToken))
-                .taskDao(new TaskDao(requestHelper, baseUrl + "/rest/v1/tasks/", apiToken))
-                .commentDao(new CommentDao(requestHelper, baseUrl + "/rest/v1/comments/", apiToken))
-                .labelDao(new LabelDao(requestHelper, baseUrl + "/rest/v1/labels/", apiToken)).build();
+                .projectDao(new ProjectDao(requestHelper, baseUrl + REST_V_1_PROJECTS, apiToken))
+                .sectionDao(new SectionDao(requestHelper, baseUrl + REST_V_1_SECTIONS, apiToken))
+                .taskDao(new TaskDao(requestHelper, baseUrl + REST_V_1_TASKS, apiToken))
+                .commentDao(new CommentDao(requestHelper, baseUrl + REST_V_1_COMMENTS, apiToken))
+                .labelDao(new LabelDao(requestHelper, baseUrl + REST_V_1_LABELS, apiToken)).build();
     }
 
     public static TodoistClient buildClient(String apiToken) {
-        return buildClient("https://api.todoist.com", apiToken);
+        return buildClient(URL, apiToken);
     }
 
 

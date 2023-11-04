@@ -11,6 +11,9 @@ import static com.rjesquivias.todoist.Predicates.okPredicate;
 
 final class TaskDao implements ITaskDao {
 
+    public static final String CLOSE = "/close";
+    public static final String REOPEN = "/reopen";
+    public static final String BODY = "";
     private final String baseUri;
     private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private final HttpRequestFactory httpRequestFactory;
@@ -54,14 +57,14 @@ final class TaskDao implements ITaskDao {
     @Override
     public void close(long id) {
         LOGGER.info("TaskDao::close(long id)");
-        HttpRequest request = httpRequestFactory.buildPost(baseUri + id + "/close", "");
+        HttpRequest request = httpRequestFactory.buildPost(baseUri + id + CLOSE, BODY);
         httpRequestHelper.makeRequest(request, noContentPredicate, ImmutableTask.class);
     }
 
     @Override
     public void reOpen(long id) {
         LOGGER.info("TaskDao::reOpen(long id)");
-        HttpRequest request = httpRequestFactory.buildPost(baseUri + id + "/reopen", "");
+        HttpRequest request = httpRequestFactory.buildPost(baseUri + id + REOPEN, BODY);
         httpRequestHelper.makeRequest(request, noContentPredicate, ImmutableTask.class);
     }
 

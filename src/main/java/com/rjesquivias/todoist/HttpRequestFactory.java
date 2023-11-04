@@ -10,6 +10,8 @@ import java.net.http.HttpRequest.BodyPublishers;
 
 final class HttpRequestFactory {
 
+    public static final String BEARER = "Bearer ";
+    public static final String AUTHORIZATION = "Authorization";
     private final String token;
     private final ObjectMapper objectMapper;
 
@@ -31,7 +33,7 @@ final class HttpRequestFactory {
     public HttpRequest buildPost(String uri, String body) {
         try {
             return HttpRequest.newBuilder().uri(new URI(uri))
-                    .header("Authorization", "Bearer " + token)
+                    .header(AUTHORIZATION, BEARER + token)
                     .header("Content-Type", "application/json")
                     .POST(BodyPublishers.ofString(body)).build();
         } catch (URISyntaxException e) {
@@ -42,7 +44,7 @@ final class HttpRequestFactory {
     public HttpRequest buildGet(String uri) {
         try {
             return HttpRequest.newBuilder().uri(new URI(uri))
-                    .header("Authorization", "Bearer " + token)
+                    .header(AUTHORIZATION, BEARER + token)
                     .GET().build();
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
@@ -52,7 +54,7 @@ final class HttpRequestFactory {
     public HttpRequest buildDelete(String uri) {
         try {
             return HttpRequest.newBuilder().uri(new URI(uri))
-                    .header("Authorization", "Bearer " + token)
+                    .header(AUTHORIZATION, BEARER + token)
                     .DELETE().build();
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
